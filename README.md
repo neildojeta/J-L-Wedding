@@ -112,9 +112,22 @@ best kept short and under ~20 MB.
 
 ### Replacing the envelope video or the main photo
 
-Those two are part of the design rather than content, so they ship with the
-site: `public/theme/`. Swap the file, keep the name, and redeploy. The
+These are part of the design rather than content, so they ship with the
+site in `public/theme/`. Swap a file, keep the name, and redeploy. The
 originals you sent are kept untouched in `assets-source/`.
+
+There are two cuts of the envelope, and the browser picks one at runtime —
+only the chosen file is downloaded:
+
+| File | Used by |
+| --- | --- |
+| `envelope_spin_transparent.webm` | Chrome, Edge, Firefox, Android |
+| `envelope_spin_cream.mp4` | Safari (iPhone, iPad, Mac) |
+
+Safari plays WebM but ignores its alpha channel, which would put the
+envelope on a black block, so it gets the cream-background cut instead —
+blended into the paper with a mask so the join doesn't show. Keep both
+files. If you ever replace one, replace both.
 
 ---
 

@@ -105,7 +105,11 @@ export const wedding = {
 
   /* ---- Bundled theme artwork (files in /public/theme) ---------- */
   assets: {
-    envelopeVideo: "/theme/envelope_spin_cream.mp4",
+    // Transparent WebM: composites straight onto the paper background.
+    envelopeVideo: "/theme/envelope_spin_transparent.webm",
+    // Safari plays WebM but ignores its alpha channel, so it gets the
+    // cream-background cut instead — the page is the same cream anyway.
+    envelopeVideoFallback: "/theme/envelope_spin_cream.mp4",
     mainPicture: "/theme/main_picture.webp",
     roses: ["/theme/rose1.webp", "/theme/rose2.webp", "/theme/rose3.webp"],
   },

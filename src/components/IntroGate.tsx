@@ -1,17 +1,32 @@
 import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { wedding } from "../content/weddingContent";
 import { FloralCorner, ROSE_1, ROSE_3 } from "./decor/FloralAccents";
 
 /**
- * The envelope screen. The footage sits on the same cream as the page and
- * is masked at the edges, so the envelope appears to float on the paper
- * rather than inside a video box. Lettering stays clear of it: title
- * above, invitation and call to action below.
+ * Safari plays WebM but does not composite its alpha channel — a
+ * transparent video comes out sitting on a black block. Those browsers get
+ * the cream-background cut instead, which is blended into the paper the
+ * old way. Everything else gets true transparency.
+ */
+function useEnvelopeSource() {
+  return useMemo(() => {
+    if (typeof navigator === "undefined") return { transparent: true };
+    const ua = navigator.userAgent;
+    const isWebKit = /Safari/.test(ua) && !/Chrome|Chromium|Edg|OPR|SamsungBrowser/.test(ua);
+    return { transparent: !isWebKit };
+  }, []);
+}
+
+/**
+ * The envelope screen. The footage floats directly on the paper rather
+ * than sitting in a video box. Lettering stays clear of it: title above,
+ * invitation and call to action below.
  */
 export function IntroGate({ onOpen }: { onOpen: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [opening, setOpening] = useState(false);
+  const { transparent } = useEnvelopeSource();
 
   // Mobile browsers only autoplay muted video, and some need an
   // explicit play() call.
@@ -64,8 +79,17 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
       >
         <video
           ref={videoRef}
-          className="video-vignette h-full max-h-[52vh] w-full max-w-3xl object-contain"
-          src={wedding.assets.envelopeVideo}
+          // The envelope sits inside a 16:9 frame with room around it, so a
+          // portrait screen renders it small. Scaling up on phones gives it
+          // the presence it has on a wide screen.
+          className={`h-full max-h-[52vh] w-full max-w-3xl scale-[1.35] object-contain sm:scale-100 ${
+            transparent ? "" : "video-vignette"
+          }`}
+          src={
+            transparent
+              ? wedding.assets.envelopeVideo
+              : wedding.assets.envelopeVideoFallback
+          }
           autoPlay
           muted
           loop
