@@ -24,8 +24,27 @@ The countdown reads `date`, so keep it as a real ISO timestamp:
 date: "2027-02-14T14:00:00+08:00",   // +08:00 = Philippine time
 ```
 
-Colours live in **`src/index.css`** under `@theme`. The five values there
-are the palette; change a hex and the whole site follows.
+Colours live in **`src/index.css`** under `@theme`. The palette is deep red
+and gold; change a hex and the whole site follows. Two golds are defined on
+purpose: `--color-gold` for borders and for lettering on the red panels, and
+`--color-gold-deep` for gold lettering on the cream paper, where the lighter
+gold falls to about 2:1 and stops being readable.
+
+### The venue and its map
+
+The `venue` block holds the name, address, coordinates and three Google
+links. None of them needs an API key:
+
+| Field | What it does |
+| --- | --- |
+| `mapsUrl` | Drops a pin on the coordinates |
+| `directionsUrl` | Opens turn-by-turn from wherever the guest is |
+| `embedUrl` | The map shown on the page, in an `<iframe>` |
+
+`embedUrl` is pinned at `z=17` deliberately — that is the zoom at which
+Google draws its own **Viridis Countryside Garden** label, so the venue
+names itself at the centre of the map. Zoom out and the label disappears.
+If you move the wedding, change the coordinates in all three links.
 
 ---
 
@@ -82,9 +101,10 @@ add a rewrite rule from `/*` to `/index.html`.
 
 ## 5. Adding photos and videos
 
-Highlights, venue photos and dress-code inspiration are **not** in the code —
-you add them from the Supabase dashboard, and the site picks them up on the
-next page load. No redeploy needed.
+Four highlight photos and the venue photo ship with the site (see the table
+further down). Everything you add **after** that goes through Supabase — no
+redeploy needed, and the site picks it up on the next page load. Uploaded
+photos appear after the four that ship, in the same gallery.
 
 **Step 1 — upload the file.**
 Supabase → **Storage** → `wedding-media` bucket. Create a folder
@@ -110,11 +130,33 @@ elsewhere.
 1600px wide first, or the gallery will be slow on mobile data. Videos are
 best kept short and under ~20 MB.
 
-### Replacing the envelope video or the main photo
+### Replacing the photos that ship with the site
 
-These are part of the design rather than content, so they ship with the
-site in `public/theme/`. Swap a file, keep the name, and redeploy. The
-originals you sent are kept untouched in `assets-source/`.
+These are part of the design rather than content, so they live in
+`public/theme/`. Swap a file, keep the name, and redeploy. The originals you
+sent are kept untouched in `assets-source/`.
+
+| File | Where it appears |
+| --- | --- |
+| `main_picture.webp` | The framed photograph on the invitation |
+| `venue.webp` | The wide photo in the venue section |
+| `highlight1.webp` … `highlight4.webp` | The Highlights gallery |
+| `grose1.webp` … `grose5.webp` | Gold rose artwork, used as corners and dividers |
+
+The highlight captions live with the rest of the wording, under
+`assets.highlights` in `src/content/weddingContent.ts`. Each caption doubles
+as the photo's alt text, so keep it descriptive as well as fond.
+
+`main_picture.webp` is a crop of the original, not the whole frame: the
+full photograph gives about half its height to out-of-focus grass, and the
+invitation wants the couple large. The crop box is in the note at the top
+of the hero photograph in `src/components/Hero.tsx`.
+
+The five roses are referenced by *shape*, not by number —
+`src/components/decor/FloralAccents.tsx` names them `ROSE_SPRAY`,
+`ROSE_HEART`, `ROSE_COLUMN`, `ROSE_STEM` and `ROSE_SWAG`, and the sections
+pick the shape that suits them. If you swap the artwork, keep the shapes
+roughly alike or re-point the names.
 
 There are two cuts of the envelope, and the browser picks one at runtime —
 only the chosen file is downloaded:
@@ -155,21 +197,25 @@ src/
   index.css                   ← palette, fonts, painterly styles
   components/
     IntroGate.tsx             ← envelope screen + "Open the Letter"
-    Hero.tsx                  ← names, main photo, countdown
+    Hero.tsx                  ← names, framed main photo, countdown
     EventDetails.tsx          ← ceremony and reception cards
-    Venue.tsx / DressCode.tsx / Highlights.tsx
+    Venue.tsx                 ← venue photos, address, embedded map
+    DressCode.tsx / Highlights.tsx
+    decor/FloralAccents.tsx   ← the gold roses, named by shape
     MediaGrid.tsx             ← Supabase-backed gallery + lightbox
     RsvpForm.tsx              ← the RSVP form
   lib/supabase.ts             ← client, types, storage URL helper
 supabase/schema.sql           ← run once in the SQL editor
 render.yaml                   ← Render deployment blueprint
-public/theme/                 ← envelope video, main photo, rose artwork
+public/theme/                 ← envelope video, photos, gold rose artwork
 assets-source/                ← your original full-size files (not deployed)
 ```
 
 ## Notes
 
-- Images ship as WebP (roses 473 KB → 77 KB each, main photo 209 KB → 68 KB).
+- Images ship as WebP and are trimmed to their artwork first, so the gold
+  roses cost 37–83 KB each and the main photo 68 KB.
+- The embedded map is a plain `<iframe>` — no Google API key, no billing.
 - Animations respect the visitor's "reduce motion" setting.
 - The envelope video is muted and `playsInline`, which is what lets it
   autoplay on iOS and Android.

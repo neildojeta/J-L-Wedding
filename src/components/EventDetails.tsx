@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
-import { FloralDivider } from "./decor/FloralAccents";
+import { FloralCorner, FloralDivider, ROSE_COLUMN } from "./decor/FloralAccents";
 
 export function EventDetails() {
   return (
@@ -14,6 +14,23 @@ export function EventDetails() {
         className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(122,16,16,0.75),transparent_70%)]"
       />
       <div className="canvas-grain absolute inset-0 opacity-40" aria-hidden="true" />
+
+      <FloralCorner
+        corner="tl"
+        src={ROSE_COLUMN}
+        size="w-24 lg:w-32"
+        opacity="opacity-55"
+        onDark
+        className="hidden sm:block"
+      />
+      <FloralCorner
+        corner="tr"
+        src={ROSE_COLUMN}
+        size="w-24 lg:w-32"
+        opacity="opacity-55"
+        onDark
+        className="hidden sm:block"
+      />
 
       <div className="relative mx-auto max-w-5xl">
         <SectionHeading
@@ -31,18 +48,20 @@ export function EventDetails() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.35 }}
               transition={{ duration: 0.8, delay: index * 0.12 }}
-              className="painted-edge border border-gold/35 bg-cream/[0.06] px-7 py-9 text-center backdrop-blur-sm sm:px-9"
+              className="painted-edge border border-gold/60 bg-cream/[0.08] px-7 py-9 text-center backdrop-blur-sm sm:px-9"
             >
-              <h3 className="font-display text-lg uppercase tracking-[0.28em] text-gold-soft">
+              <h3 className="font-display text-lg uppercase tracking-[0.26em] text-gold-soft sm:text-xl">
                 {event.name}
               </h3>
-              <p className="mt-5 font-script text-5xl text-cream">{event.time}</p>
-              <p className="mt-5 font-display text-sm uppercase tracking-[0.16em] text-cream/90">
+              <p className="foil-light mt-5 font-script text-6xl leading-none sm:text-7xl">
+                {event.time}
+              </p>
+              <p className="mt-6 font-display text-base uppercase tracking-[0.14em] text-cream sm:text-lg">
                 {event.venue}
               </p>
-              <p className="mt-2 text-cream/70">{event.address}</p>
+              <p className="mt-2 text-lg text-cream/85">{event.address}</p>
               {event.note && (
-                <p className="mt-6 border-t border-gold/25 pt-5 text-sm italic text-gold-soft/85">
+                <p className="mt-6 border-t border-gold/40 pt-5 text-lg italic text-gold-soft sm:text-xl">
                   {event.note}
                 </p>
               )}
@@ -50,7 +69,7 @@ export function EventDetails() {
           ))}
         </div>
 
-        <FloralDivider className="mt-16 opacity-90" />
+        <FloralDivider className="mt-16" onDark />
       </div>
     </section>
   );

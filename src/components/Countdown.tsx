@@ -7,8 +7,8 @@ export function Countdown() {
 
   if (left.passed) {
     return (
-      <p className="text-center font-script text-4xl text-maroon">
-        Today we say “I do”.
+      <p className="text-center font-script text-5xl text-maroon-900">
+        Today we say &ldquo;I do&rdquo;.
       </p>
     );
   }
@@ -32,12 +32,12 @@ export function Countdown() {
       {cells.map((cell) => (
         <div
           key={cell.label}
-          className="painted-edge flex-1 border border-gold/45 bg-cream/70 px-2 py-4 text-center shadow-[0_14px_34px_-26px_rgba(63,10,10,0.8)] sm:px-4 sm:py-5"
+          className="painted-edge flex-1 border border-gold-deep/45 bg-cream/80 px-2 py-4 text-center shadow-[0_14px_34px_-24px_rgba(63,10,10,0.8)] sm:px-4 sm:py-5"
         >
-          <div className="font-display text-2xl text-maroon-900 tabular-nums sm:text-4xl">
+          <div className="font-display text-3xl text-maroon-900 tabular-nums sm:text-5xl">
             {String(cell.value).padStart(2, "0")}
           </div>
-          <div className="mt-1 font-body text-[0.6rem] uppercase tracking-[0.24em] text-ink/60 sm:text-xs">
+          <div className="mt-1.5 font-body text-xs font-medium uppercase tracking-[0.14em] text-ink/85 sm:text-base sm:tracking-[0.2em]">
             {cell.label}
           </div>
         </div>

@@ -10,11 +10,15 @@ export function SectionHeading({
   script?: string;
   title: string;
   intro?: string;
+  /** "dark" = drawn on the cream paper, "light" = on the red panels. */
   tone?: "dark" | "light";
 }) {
-  const titleColor = tone === "light" ? "text-cream" : "text-maroon-900";
-  const introColor = tone === "light" ? "text-cream/80" : "text-ink/75";
-  const scriptColor = tone === "light" ? "text-gold-soft" : "text-gold";
+  const light = tone === "light";
+  const titleColor = light ? "text-cream" : "text-maroon-900";
+  const introColor = light ? "text-cream/90" : "text-ink/90";
+  // Gold leaf on the red panels; the darker gold gradient on cream, where
+  // bright gold would drop to about 2:1 against the paper.
+  const scriptColor = light ? "foil-light" : "foil";
 
   return (
     <motion.header
@@ -25,16 +29,16 @@ export function SectionHeading({
       className="mx-auto max-w-2xl text-center"
     >
       {script && (
-        <p className={`font-script text-3xl sm:text-4xl ${scriptColor}`}>{script}</p>
+        <p className={`font-script text-4xl sm:text-5xl ${scriptColor}`}>{script}</p>
       )}
       <h2
-        className={`brush-underline mt-1 font-display text-3xl uppercase tracking-[0.22em] sm:text-4xl ${titleColor}`}
+        className={`brush-underline mt-2 font-display text-3xl uppercase tracking-[0.2em] sm:text-4xl ${titleColor}`}
       >
         {title}
       </h2>
-      <Ornament className="mx-auto mt-7 opacity-80" />
+      <Ornament tone={tone} className="mx-auto mt-8 opacity-90" />
       {intro && (
-        <p className={`mt-5 text-lg leading-relaxed ${introColor}`}>{intro}</p>
+        <p className={`mt-6 text-lg leading-relaxed sm:text-xl ${introColor}`}>{intro}</p>
       )}
     </motion.header>
   );

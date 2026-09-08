@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
 import { MediaGrid } from "./MediaGrid";
+import { FloralCorner, ROSE_SPRAY } from "./decor/FloralAccents";
 
 const { dressCode } = wedding;
 
@@ -12,6 +13,14 @@ export function DressCode() {
       className="relative overflow-hidden bg-cream-deep px-5 py-20 sm:px-8 sm:py-28"
     >
       <div className="canvas-grain absolute inset-0 opacity-60" aria-hidden="true" />
+
+      <FloralCorner
+        corner="tr"
+        src={ROSE_SPRAY}
+        size="w-28 sm:w-36"
+        opacity="opacity-60"
+        className="hidden sm:block"
+      />
 
       <div className="relative mx-auto max-w-5xl">
         <SectionHeading
@@ -33,10 +42,12 @@ export function DressCode() {
               transition={{ duration: 0.75, delay: index * 0.1 }}
               className="painted-panel px-8 py-8 text-center"
             >
-              <h3 className="font-display text-sm uppercase tracking-[0.26em] text-gold">
+              <h3 className="font-display text-base uppercase tracking-[0.22em] text-gold-deep sm:text-lg">
                 {card.heading}
               </h3>
-              <p className="mt-4 text-lg leading-relaxed text-ink/85">{card.body}</p>
+              <p className="mt-4 text-lg leading-relaxed text-ink/90 sm:text-xl">
+                {card.body}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -49,24 +60,24 @@ export function DressCode() {
           transition={{ duration: 0.8 }}
           className="mt-14 text-center"
         >
-          <h3 className="font-display text-xs uppercase tracking-[0.3em] text-maroon/80">
+          <h3 className="font-display text-base uppercase tracking-[0.24em] text-maroon-900 sm:text-lg">
             Our Colour Palette
           </h3>
-          <ul className="mt-7 flex flex-wrap items-start justify-center gap-5 sm:gap-8">
+          <ul className="mt-8 flex flex-wrap items-start justify-center gap-6 sm:gap-9">
             {dressCode.palette.map((swatch) => (
               <li key={swatch.hex} className="w-20 sm:w-24">
                 <span
-                  className="mx-auto block aspect-square w-full rounded-full shadow-[0_10px_26px_-14px_rgba(63,10,10,0.7)] ring-1 ring-inset ring-maroon-950/15"
+                  className="mx-auto block aspect-square w-full rounded-full shadow-[0_10px_26px_-14px_rgba(63,10,10,0.7)] ring-1 ring-inset ring-maroon-950/25"
                   style={{ backgroundColor: swatch.hex }}
                   aria-hidden="true"
                 />
-                <span className="mt-3 block font-body text-xs uppercase tracking-[0.14em] text-ink/70">
+                <span className="mt-3 block font-body text-base font-medium uppercase tracking-[0.06em] text-ink/85">
                   {swatch.name}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="mx-auto mt-9 max-w-xl font-body text-base italic text-maroon/85">
+          <p className="mx-auto mt-10 max-w-xl font-body text-lg italic text-maroon-900 sm:text-xl">
             {dressCode.note}
           </p>
         </motion.div>

@@ -28,15 +28,15 @@ export function Navbar() {
       transition={{ duration: 0.8, delay: 0.6 }}
       className={`sticky top-0 z-40 border-b transition-colors duration-500 ${
         solid
-          ? "border-gold/30 bg-cream/92 backdrop-blur-md"
+          ? "border-gold/45 bg-cream/95 backdrop-blur-md"
           : "border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-3 py-3 sm:px-6">
         {/* Hidden on phones so all six links, RSVP included, stay reachable. */}
         <a
           href="#invitation"
-          className="hidden shrink-0 font-script text-2xl text-maroon sm:block sm:text-3xl"
+          className="hidden shrink-0 font-script text-3xl text-maroon-900 sm:block"
         >
           {wedding.monogram}
         </a>
@@ -46,7 +46,7 @@ export function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="whitespace-nowrap px-1 py-2 font-display text-[0.55rem] uppercase tracking-[0.12em] text-ink/70 transition-colors hover:text-maroon sm:px-3 sm:text-[0.72rem] sm:tracking-[0.2em]"
+                className="whitespace-nowrap px-1.5 py-2 font-display text-[0.72rem] font-medium uppercase tracking-[0.05em] text-maroon-900/90 transition-colors hover:text-maroon sm:px-3 sm:text-base sm:tracking-[0.14em]"
               >
                 {link.label}
               </a>

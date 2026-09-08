@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { wedding } from "../content/weddingContent";
-import { FloralCorner, ROSE_1, ROSE_3 } from "./decor/FloralAccents";
+import { FloralCorner, ROSE_COLUMN, ROSE_SPRAY } from "./decor/FloralAccents";
 
 /**
  * Safari plays WebM but does not composite its alpha channel — a
@@ -21,7 +21,8 @@ function useEnvelopeSource() {
 /**
  * The envelope screen. The footage floats directly on the paper rather
  * than sitting in a video box. Lettering stays clear of it: title above,
- * invitation and call to action below.
+ * names and call to action below. The date is not shown here — the
+ * envelope is still sealed; the invitation gives it once opened.
  */
 export function IntroGate({ onOpen }: { onOpen: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -52,8 +53,18 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
       transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
       aria-label="Wedding invitation"
     >
-      <FloralCorner corner="tl" src={ROSE_3} size="w-20 sm:w-44 lg:w-56" opacity="opacity-80" />
-      <FloralCorner corner="br" src={ROSE_1} size="w-20 sm:w-44 lg:w-56" opacity="opacity-75" />
+      <FloralCorner
+        corner="tl"
+        src={ROSE_COLUMN}
+        size="w-20 sm:w-32 lg:w-40"
+        opacity="opacity-80"
+      />
+      <FloralCorner
+        corner="br"
+        src={ROSE_SPRAY}
+        size="w-20 sm:w-32 lg:w-40"
+        opacity="opacity-80"
+      />
 
       {/* --- Title ------------------------------------------------ */}
       <motion.div
@@ -62,10 +73,10 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
         transition={{ delay: 0.35, duration: 0.9 }}
         className="relative z-10 shrink-0"
       >
-        <p className="font-body text-[0.6rem] uppercase tracking-[0.38em] text-maroon/70 sm:text-xs">
+        <p className="font-body text-xs font-medium uppercase tracking-[0.28em] text-maroon sm:text-base sm:tracking-[0.36em]">
           {wedding.intro.eyebrow}
         </p>
-        <h1 className="mt-3 font-display text-3xl uppercase leading-tight tracking-[0.18em] text-maroon-900 sm:text-5xl">
+        <h1 className="mt-3 font-display text-[2rem] uppercase leading-tight tracking-[0.16em] text-maroon-900 sm:text-5xl sm:tracking-[0.18em]">
           {wedding.intro.title}
         </h1>
       </motion.div>
@@ -105,7 +116,7 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.75, duration: 0.9 }}
-          className="font-body text-sm italic text-ink/70 sm:text-base"
+          className="font-body text-base italic text-ink/85 sm:text-lg"
         >
           {wedding.intro.subtitle}
         </motion.p>
@@ -114,10 +125,10 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 1 }}
-          className="mt-1 font-script text-[clamp(2rem,12vw,3rem)] leading-tight text-maroon sm:text-7xl"
+          className="mt-1 font-script text-[clamp(2.2rem,13vw,3.25rem)] leading-tight text-maroon-900 sm:text-7xl"
         >
           {wedding.partnerOne.first}
-          <span className="mx-2 text-gold sm:mx-4">&amp;</span>
+          <span className="foil mx-2 sm:mx-4">&amp;</span>
           {wedding.partnerTwo.first}
         </motion.p>
 
@@ -129,27 +140,18 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
           transition={{ delay: 1.2, duration: 0.8 }}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
-          className="painted-edge group mt-7 border border-gold/60 bg-maroon px-8 py-3.5 font-display text-[0.68rem] uppercase tracking-[0.28em] text-cream shadow-[0_18px_40px_-22px_rgba(63,10,10,0.9)] transition-colors hover:bg-maroon-600 sm:px-10 sm:text-xs"
+          className="painted-edge group mt-8 border border-gold bg-maroon px-9 py-4 font-display text-sm font-medium uppercase tracking-[0.22em] text-cream shadow-[0_18px_40px_-22px_rgba(63,10,10,0.9)] transition-colors hover:bg-maroon-600 sm:px-11 sm:text-base"
         >
           <span className="inline-flex items-center gap-3">
             {wedding.intro.cta}
             <span
               aria-hidden="true"
-              className="transition-transform duration-500 group-hover:translate-x-1"
+              className="text-gold-soft transition-transform duration-500 group-hover:translate-x-1"
             >
               &#10148;
             </span>
           </span>
         </motion.button>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="mt-5 font-body text-[0.6rem] uppercase tracking-[0.3em] text-ink/50 sm:text-xs"
-        >
-          {wedding.dateLabel}
-        </motion.p>
       </div>
     </motion.section>
   );

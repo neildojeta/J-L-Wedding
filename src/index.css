@@ -1,8 +1,7 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------
-   WEDDING PALETTE
-   These values come from the couple's palette swatch.
+   WEDDING PALETTE — deep red and gold.
    Tweak the hex codes here and the whole site follows.
 ------------------------------------------------------------------ */
 @theme {
@@ -12,6 +11,10 @@
   --color-maroon-600: #8b1a1a;
   --color-gold: #c9a05b;
   --color-gold-soft: #e3cda8;
+  /* Antique gold is too pale to read as text on cream (2.2:1). This is the
+     same hue taken dark enough to pass contrast (4.7:1) — use it for any
+     gold lettering that sits on a light background. */
+  --color-gold-deep: #8a6520;
   --color-cream: #fbf0dc;
   --color-cream-deep: #f3e3c4;
   --color-ink: #3a1f1a;
@@ -39,8 +42,10 @@
     background-color: var(--color-cream);
     color: var(--color-ink);
     font-family: var(--font-body);
-    font-size: 1.0625rem;
-    line-height: 1.75;
+    /* Cormorant Garamond runs small for its point size, so the base sits
+       above the usual 17px — the guest notes were hard to read before. */
+    font-size: 1.1875rem;
+    line-height: 1.7;
     overflow-x: hidden;
   }
 
@@ -51,7 +56,7 @@
   }
 
   :where(a, button, input, select, textarea):focus-visible {
-    outline: 2px solid var(--color-gold);
+    outline: 2px solid var(--color-maroon);
     outline-offset: 3px;
     border-radius: 3px;
   }
@@ -66,13 +71,14 @@
   /* ---- Painterly surfaces ---------------------------------- */
 
   /* Canvas grain. Needs a positioned ancestor, which every caller has
-     via a Tailwind position utility. */
+     via a Tailwind position utility. Kept light: grain laid over
+     lettering costs contrast. */
   .canvas-grain::before {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.34;
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
   }
@@ -80,9 +86,9 @@
   .paper {
     background-color: var(--color-cream);
     background-image:
-      radial-gradient(115% 85% at 12% 0%, rgba(227, 205, 168, 0.55), transparent 62%),
-      radial-gradient(95% 70% at 92% 12%, rgba(201, 160, 91, 0.24), transparent 58%),
-      radial-gradient(120% 90% at 50% 108%, rgba(122, 16, 16, 0.12), transparent 64%);
+      radial-gradient(115% 85% at 12% 0%, rgba(227, 205, 168, 0.5), transparent 62%),
+      radial-gradient(95% 70% at 92% 12%, rgba(201, 160, 91, 0.22), transparent 58%),
+      radial-gradient(120% 90% at 50% 108%, rgba(122, 16, 16, 0.1), transparent 64%);
   }
 
   /* Hand-cut edges: irregular but gentle, so small elements such as
@@ -94,16 +100,156 @@
   .painted-panel {
     background-image: radial-gradient(
       120% 120% at 20% 0%,
-      rgba(255, 252, 244, 0.96),
-      rgba(251, 240, 220, 0.9) 55%,
-      rgba(243, 227, 196, 0.86)
+      rgba(255, 253, 247, 0.97),
+      rgba(252, 243, 226, 0.94) 55%,
+      rgba(244, 230, 202, 0.9)
     );
-    border: 1px solid rgba(201, 160, 91, 0.42);
+    border: 1px solid rgba(138, 101, 32, 0.45);
     border-radius: 20px 26px 18px 24px / 16px 20px 22px 17px;
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.75) inset,
       0 18px 44px -28px rgba(63, 10, 10, 0.5);
   }
+
+  /* ---- Gold lettering --------------------------------------- */
+
+  /* Gold leaf, as text. The solid colour is the fallback for browsers
+     without background-clip on text — the letters must never vanish. */
+  .foil {
+    color: var(--color-gold-deep);
+  }
+  .foil-light {
+    color: var(--color-gold-soft);
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .foil,
+    .foil-light {
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+    /* On cream: every stop kept dark enough to read. */
+    .foil {
+      background-image: linear-gradient(
+        168deg,
+        #b58527 0%,
+        #8a6520 38%,
+        #6d4d12 62%,
+        #a97c23 100%
+      );
+    }
+    /* On the deep red panels, where gold is free to be bright. */
+    .foil-light {
+      background-image: linear-gradient(
+        168deg,
+        #f6e6c2 0%,
+        #dcbb7d 40%,
+        #c9a05b 64%,
+        #f2dfb6 100%
+      );
+    }
+  }
+
+  /* ---- Frames ------------------------------------------------ */
+
+  /* Vignetted photo frame with a hand-torn feel. */
+  .photo-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px 26px 18px 24px / 16px 20px 22px 17px;
+    box-shadow:
+      0 0 0 1px rgba(138, 101, 32, 0.55),
+      0 0 0 9px rgba(251, 240, 220, 0.9),
+      0 0 0 10px rgba(201, 160, 91, 0.45),
+      0 26px 60px -30px rgba(63, 10, 10, 0.6);
+  }
+  .photo-frame img,
+  .photo-frame video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(90% 80% at 50% 45%, transparent 58%, rgba(63, 10, 10, 0.2));
+  }
+
+  /* The showcase frame: a poured-gold mat over a red hairline, for the one
+     photograph that carries the page. */
+  .frame-gold {
+    position: relative;
+    padding: clamp(7px, 1.4vw, 13px);
+    border-radius: 24px 30px 22px 28px / 20px 24px 26px 21px;
+    background-image: linear-gradient(
+      142deg,
+      #f2dfb6 0%,
+      #c9a05b 22%,
+      #8a6520 46%,
+      #d9b877 66%,
+      #8a6520 84%,
+      #efdcb0 100%
+    );
+    box-shadow:
+      0 0 0 1px rgba(92, 13, 13, 0.45),
+      0 34px 80px -38px rgba(63, 10, 10, 0.85),
+      0 6px 22px -14px rgba(122, 16, 16, 0.45);
+  }
+  .frame-gold-inner {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px 22px 14px 20px / 13px 16px 18px 14px;
+    box-shadow: 0 0 0 1px rgba(63, 10, 10, 0.55) inset;
+  }
+  .frame-gold img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Warm halo, so the frame reads as lit rather than pasted on. */
+  .frame-gold::before {
+    content: "";
+    position: absolute;
+    inset: -7%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 50%;
+    background: radial-gradient(
+      60% 55% at 50% 50%,
+      rgba(201, 160, 91, 0.36),
+      rgba(122, 16, 16, 0.15) 55%,
+      transparent 78%
+    );
+    filter: blur(24px);
+  }
+
+  /* The Google map, warmed just enough to sit on the paper without
+     costing the street names their legibility. */
+  .map-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px 24px 16px 22px / 14px 18px 20px 15px;
+    box-shadow:
+      0 0 0 1px rgba(122, 16, 16, 0.4),
+      0 0 0 7px rgba(251, 240, 220, 0.92),
+      0 0 0 8px rgba(138, 101, 32, 0.55),
+      0 24px 56px -32px rgba(63, 10, 10, 0.65);
+  }
+  .map-frame iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    filter: sepia(0.2) saturate(1.06) contrast(1.02);
+  }
+
+  /* ---- Ornament ---------------------------------------------- */
 
   /* Brush-stroke underline beneath section headings. */
   .brush-underline {
@@ -120,46 +266,30 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(201, 160, 91, 0.85) 18%,
-      rgba(122, 16, 16, 0.7) 52%,
-      rgba(201, 160, 91, 0.8) 82%,
+      rgba(201, 160, 91, 0.9) 18%,
+      rgba(122, 16, 16, 0.8) 52%,
+      rgba(201, 160, 91, 0.85) 82%,
       transparent
     );
     border-radius: 60% 40% 55% 45% / 100% 100% 100% 100%;
     filter: blur(0.4px);
   }
 
-  /* Vignetted photo frame with a hand-torn feel. */
-  .photo-frame {
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px 26px 18px 24px / 16px 20px 22px 17px;
-    box-shadow:
-      0 0 0 1px rgba(201, 160, 91, 0.5),
-      0 0 0 9px rgba(251, 240, 220, 0.9),
-      0 0 0 10px rgba(201, 160, 91, 0.35),
-      0 26px 60px -30px rgba(63, 10, 10, 0.6);
-  }
-  .photo-frame img,
-  .photo-frame video {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .photo-frame::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(90% 80% at 50% 45%, transparent 55%, rgba(63, 10, 10, 0.22));
-  }
-
-  /* Warms the pink roses toward the maroon/gold palette. */
+  /* The rose artwork is gold on a pale page, so it needs a shadow to hold
+     its shape. No hue shift — this artwork is already the right colour. */
   .floral {
-    filter: sepia(0.28) saturate(1.35) hue-rotate(-12deg) brightness(1.02);
+    filter:
+      saturate(1.06) contrast(1.04)
+      drop-shadow(0 8px 16px rgba(92, 13, 13, 0.3))
+      drop-shadow(0 1px 0 rgba(92, 13, 13, 0.28));
     user-select: none;
     pointer-events: none;
+  }
+  /* Against the deep red panels the same artwork wants lift, not shadow. */
+  .floral-on-dark {
+    filter:
+      saturate(1.1) brightness(1.06)
+      drop-shadow(0 0 18px rgba(201, 160, 91, 0.35));
   }
 
   /* The envelope footage sits on a near-white ground. Multiplying it
