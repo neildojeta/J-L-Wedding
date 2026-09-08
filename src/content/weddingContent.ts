@@ -6,19 +6,20 @@
 
 export const wedding = {
   /* ---- The couple -------------------------------------------- */
-  // TODO: replace with the full names.
-  bride: { first: "Jane", full: "Jane [Surname]" },
-  groom: { first: "Liam", full: "Liam [Surname]" },
+  // Ordered to match the J & L wax seal on the envelope.
+  // TODO: add the surnames — they appear in the photo's alt text.
+  partnerOne: { first: "Jonmark", full: "Jonmark [Surname]" },
+  partnerTwo: { first: "Linneth", full: "Linneth [Surname]" },
   monogram: "J & L",
-  hashtag: "#JandLForever", // TODO
+  hashtag: "#JonmarkAndLinneth2026", // TODO: change if you have your own
 
   /* ---- Date & time ------------------------------------------- */
   // ISO 8601 with timezone offset. +08:00 = Philippine time.
-  // TODO: set the real date — the countdown reads this value.
-  date: "2027-02-14T14:00:00+08:00",
-  dateLabel: "February 14, 2027", // TODO
-  dayLabel: "Sunday",
-  timeLabel: "2:00 in the afternoon",
+  // The countdown reads this value.
+  date: "2026-10-17T14:00:00+08:00",
+  dateLabel: "October 17, 2026",
+  dayLabel: "Saturday",
+  timeLabel: "2:00 in the afternoon", // TODO: confirm the ceremony time
 
   /* ---- Landing / envelope screen ------------------------------ */
   intro: {
@@ -83,7 +84,8 @@ export const wedding = {
 
   /* ---- RSVP ---------------------------------------------------- */
   rsvp: {
-    deadlineLabel: "January 15, 2027", // TODO
+    // TODO: confirm. Set to about two and a half weeks before the day.
+    deadlineLabel: "September 30, 2026",
     intro:
       "Kindly let us know if you can join us. We have reserved seats for the names on your invitation.",
     // Guests cannot request more seats than this.

@@ -7,8 +7,8 @@ export function Footer() {
       <div className="relative mx-auto max-w-2xl">
         <FloralDivider className="opacity-90" />
 
-        <p className="mt-10 font-script text-5xl text-maroon sm:text-6xl">
-          {wedding.bride.first} &amp; {wedding.groom.first}
+        <p className="mt-10 font-script text-[clamp(2rem,12vw,3rem)] text-maroon sm:text-6xl">
+          {wedding.partnerOne.first} &amp; {wedding.partnerTwo.first}
         </p>
         <p className="mt-4 font-display text-xs uppercase tracking-[0.3em] text-ink/70">
           {wedding.dateLabel}

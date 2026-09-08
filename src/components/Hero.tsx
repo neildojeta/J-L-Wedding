@@ -30,11 +30,11 @@ export function Hero() {
         <motion.h1
           {...fadeUp}
           transition={{ duration: 0.9, delay: 0.2 }}
-          className="mt-6 font-script text-6xl leading-[1.05] text-maroon-900 sm:text-8xl"
+          className="mt-6 font-script text-[clamp(2.4rem,12.5vw,7rem)] leading-[1.05] text-maroon-900"
         >
-          {wedding.bride.first}
+          {wedding.partnerOne.first}
           <span className="mx-3 text-gold sm:mx-5">&amp;</span>
-          {wedding.groom.first}
+          {wedding.partnerTwo.first}
         </motion.h1>
 
         <motion.div
@@ -59,7 +59,7 @@ export function Hero() {
         >
           <img
             src={wedding.assets.mainPicture}
-            alt={`${wedding.bride.full} and ${wedding.groom.full}`}
+            alt={`${wedding.partnerOne.full} and ${wedding.partnerTwo.full}`}
             className="h-full w-full object-cover"
             fetchPriority="high"
           />

@@ -114,11 +114,11 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 1 }}
-          className="mt-1 font-script text-5xl leading-tight text-maroon sm:text-7xl"
+          className="mt-1 font-script text-[clamp(2rem,12vw,3rem)] leading-tight text-maroon sm:text-7xl"
         >
-          {wedding.bride.first}
+          {wedding.partnerOne.first}
           <span className="mx-2 text-gold sm:mx-4">&amp;</span>
-          {wedding.groom.first}
+          {wedding.partnerTwo.first}
         </motion.p>
 
         <motion.button
