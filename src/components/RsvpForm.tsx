@@ -1,0 +1,306 @@
+import { useState, type FormEvent } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { wedding } from "../content/weddingContent";
+import { supabase, isSupabaseConfigured, type RsvpSubmission } from "../lib/supabase";
+import { SectionHeading } from "./SectionHeading";
+import { FloralDivider } from "./decor/FloralAccents";
+
+type Status = "idle" | "sending" | "sent" | "error";
+
+const field =
+  "w-full border border-gold/45 bg-cream/80 px-4 py-3 font-body text-ink placeholder:text-ink/40 transition-colors focus:border-maroon/60 focus:bg-cream";
+// The form sits on the deep maroon panel, so labels need the light tone.
+const label =
+  "block font-display text-[0.68rem] uppercase tracking-[0.22em] text-gold-soft/90";
+
+export function RsvpForm() {
+  const [attending, setAttending] = useState<boolean | null>(null);
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorText, setErrorText] = useState<string | null>(null);
+  const [partySize, setPartySize] = useState(1);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (attending === null || status === "sending") return;
+
+    const form = new FormData(event.currentTarget);
+    const text = (key: string) => {
+      const value = (form.get(key) as string | null)?.trim();
+      return value ? value : null;
+    };
+
+    const fullName = text("full_name");
+    if (!fullName) {
+      setErrorText("Please tell us your name.");
+      setStatus("error");
+      return;
+    }
+
+    const payload: RsvpSubmission = {
+      full_name: fullName,
+      email: text("email"),
+      phone: text("phone"),
+      attending,
+      party_size: attending ? partySize : 0,
+      guest_names: attending ? text("guest_names") : null,
+      dietary_notes: attending ? text("dietary_notes") : null,
+      message: text("message"),
+    };
+
+    if (!supabase) {
+      setErrorText(
+        "The RSVP list is not connected yet. Please try again shortly, or message us directly.",
+      );
+      setStatus("error");
+      return;
+    }
+
+    setStatus("sending");
+    setErrorText(null);
+
+    const { error } = await supabase.from("rsvps").insert(payload);
+
+    if (error) {
+      setErrorText(
+        "Something went wrong sending your reply. Please try again, or message us directly.",
+      );
+      setStatus("error");
+      return;
+    }
+
+    setStatus("sent");
+  }
+
+  return (
+    <section
+      id="rsvp"
+      className="relative overflow-hidden bg-maroon-950 px-5 py-20 text-cream sm:px-8 sm:py-28"
+    >
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(85%_65%_at_50%_100%,rgba(122,16,16,0.8),transparent_72%)]"
+      />
+      <div className="canvas-grain absolute inset-0 opacity-40" aria-hidden="true" />
+
+      <div className="relative mx-auto max-w-2xl">
+        <SectionHeading
+          script="Will you join us?"
+          title="RSVP"
+          intro={wedding.rsvp.intro}
+          tone="light"
+        />
+
+        <p className="mt-6 text-center font-display text-[0.7rem] uppercase tracking-[0.26em] text-gold-soft">
+          Kindly reply by {wedding.rsvp.deadlineLabel}
+        </p>
+
+        <AnimatePresence mode="wait">
+          {status === "sent" ? (
+            <motion.div
+              key="thanks"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7 }}
+              className="painted-edge mt-12 border border-gold/40 bg-cream/[0.07] px-8 py-12 text-center backdrop-blur-sm"
+            >
+              <p className="font-script text-5xl text-gold-soft">
+                {wedding.rsvp.thankYouTitle}
+              </p>
+              <p className="mx-auto mt-5 max-w-md text-lg leading-relaxed text-cream/85">
+                {attending
+                  ? wedding.rsvp.thankYouAttending
+                  : wedding.rsvp.thankYouDeclined}
+              </p>
+              <FloralDivider className="mt-10 opacity-80" />
+            </motion.div>
+          ) : (
+            <motion.form
+              key="form"
+              onSubmit={handleSubmit}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.8 }}
+              className="mt-12 space-y-7"
+              noValidate
+            >
+              <div>
+                <label className={label} htmlFor="full_name">
+                  Full name *
+                </label>
+                <input
+                  id="full_name"
+                  name="full_name"
+                  required
+                  autoComplete="name"
+                  className={`${field} mt-2`}
+                  placeholder="As it appears on your invitation"
+                />
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label className={label} htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    className={`${field} mt-2`}
+                    placeholder="you@example.com"
+                  />
+                </div>
+                <div>
+                  <label className={label} htmlFor="phone">
+                    Mobile number
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    className={`${field} mt-2`}
+                    placeholder="+63 900 000 0000"
+                  />
+                </div>
+              </div>
+
+              <fieldset>
+                <legend className={label}>Will you be attending? *</legend>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {[
+                    { value: true, text: "Joyfully accepts" },
+                    { value: false, text: "Regretfully declines" },
+                  ].map((choice) => {
+                    const selected = attending === choice.value;
+                    return (
+                      <button
+                        key={String(choice.value)}
+                        type="button"
+                        onClick={() => setAttending(choice.value)}
+                        aria-pressed={selected}
+                        className={`painted-edge border px-5 py-4 font-display text-[0.7rem] uppercase tracking-[0.2em] transition-colors ${
+                          selected
+                            ? "border-gold bg-gold/90 text-maroon-950"
+                            : "border-gold/40 bg-cream/[0.06] text-cream/85 hover:bg-cream/[0.12]"
+                        }`}
+                      >
+                        {choice.text}
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+
+              <AnimatePresence initial={false}>
+                {attending && (
+                  <motion.div
+                    key="guest-fields"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.45, ease: "easeOut" }}
+                    className="space-y-7 overflow-hidden"
+                  >
+                    <div className="pt-1">
+                      <label className={label} htmlFor="party_size">
+                        Number attending (including you)
+                      </label>
+                      <select
+                        id="party_size"
+                        name="party_size"
+                        value={partySize}
+                        onChange={(event) => setPartySize(Number(event.target.value))}
+                        className={`${field} mt-2 appearance-none`}
+                      >
+                        {Array.from(
+                          { length: wedding.rsvp.maxPartySize },
+                          (_, i) => i + 1,
+                        ).map((n) => (
+                          <option key={n} value={n}>
+                            {n}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {partySize > 1 && (
+                      <div>
+                        <label className={label} htmlFor="guest_names">
+                          Names of those joining you
+                        </label>
+                        <input
+                          id="guest_names"
+                          name="guest_names"
+                          className={`${field} mt-2`}
+                          placeholder="Separate names with a comma"
+                        />
+                      </div>
+                    )}
+
+                    <div>
+                      <label className={label} htmlFor="dietary_notes">
+                        Dietary restrictions or allergies
+                      </label>
+                      <input
+                        id="dietary_notes"
+                        name="dietary_notes"
+                        className={`${field} mt-2`}
+                        placeholder="Optional"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div>
+                <label className={label} htmlFor="message">
+                  A message for the couple
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  className={`${field} mt-2 resize-y`}
+                  placeholder="Optional — we would love to hear from you"
+                />
+              </div>
+
+              {status === "error" && errorText && (
+                <p
+                  role="alert"
+                  className="border border-gold/50 bg-cream/10 px-4 py-3 text-center text-sm text-gold-soft"
+                >
+                  {errorText}
+                </p>
+              )}
+
+              {!isSupabaseConfigured && (
+                <p className="text-center text-xs italic text-cream/50">
+                  Preview mode — replies are not recorded until Supabase is connected.
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={attending === null || status === "sending"}
+                className="painted-edge w-full border border-gold/60 bg-gold px-8 py-4 font-display text-xs uppercase tracking-[0.3em] text-maroon-950 transition-all hover:bg-gold-soft disabled:cursor-not-allowed disabled:opacity-45 sm:text-sm"
+              >
+                {status === "sending" ? "Sending…" : "Send our reply"}
+              </button>
+
+              {attending === null && (
+                <p className="text-center text-xs italic text-cream/55">
+                  Please choose an answer above to send your reply.
+                </p>
+              )}
+            </motion.form>
+          )}
+        </AnimatePresence>
+      </div>
+    </section>
+  );
+}
