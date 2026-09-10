@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
 import { MediaGrid } from "./MediaGrid";
-import { FloralCorner, ROSE_STEM } from "./decor/FloralAccents";
+import { FloralCorner, ROSE_CASCADE, ROSE_STEM } from "./decor/FloralAccents";
 
 const { venue } = wedding;
 
@@ -16,9 +16,16 @@ export function Venue() {
   return (
     <section
       id="venue"
-      className="paper canvas-grain relative overflow-hidden px-5 py-20 sm:px-8 sm:py-28"
+      className="relative scroll-mt-24 overflow-hidden px-5 py-20 sm:px-8 sm:py-28"
     >
       <FloralCorner corner="bl" src={ROSE_STEM} opacity="opacity-60" size="w-28 sm:w-40" />
+      <FloralCorner
+        corner="tr"
+        src={ROSE_CASCADE}
+        size="w-28 sm:w-40 lg:w-48"
+        opacity="opacity-55"
+        className="hidden sm:block"
+      />
 
       <div className="relative mx-auto max-w-5xl">
         <SectionHeading

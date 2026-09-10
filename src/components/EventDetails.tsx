@@ -1,19 +1,35 @@
 import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
-import { FloralCorner, FloralDivider, ROSE_COLUMN } from "./decor/FloralAccents";
+import {
+  DUST_SPARKLE,
+  FloralCorner,
+  FloralDivider,
+  GoldDust,
+  ROSE_COLUMN,
+  ROSE_CREST,
+} from "./decor/FloralAccents";
 
 export function EventDetails() {
   return (
     <section
       id="details"
-      className="relative overflow-hidden bg-maroon-950 px-5 py-20 text-cream sm:px-8 sm:py-28"
+      className="letter-panel relative mx-4 my-2 scroll-mt-24 overflow-hidden bg-maroon-950 px-5 py-16 text-cream sm:mx-8 sm:my-4 sm:px-8 sm:py-20"
     >
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(122,16,16,0.75),transparent_70%)]"
       />
       <div className="canvas-grain absolute inset-0 opacity-40" aria-hidden="true" />
+
+      {/* Gold caught in the light across the top of the panel. Faded out
+          before it reaches the cards, whose glass is translucent enough to
+          take the sparkle with it and muddy the lettering. */}
+      <GoldDust
+        src={DUST_SPARKLE}
+        className="band-fade inset-x-0 top-0 w-full"
+        opacity="opacity-55"
+      />
 
       <FloralCorner
         corner="tl"
@@ -69,7 +85,9 @@ export function EventDetails() {
           ))}
         </div>
 
-        <FloralDivider className="mt-16" onDark />
+        {/* The crest is the one red-and-gold rose with enough gold leaf to
+            hold its shape against the maroon. */}
+        <FloralDivider className="mt-16" src={ROSE_CREST} onDark />
       </div>
     </section>
   );

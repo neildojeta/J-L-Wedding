@@ -12,9 +12,14 @@
   --color-gold: #c9a05b;
   --color-gold-soft: #e3cda8;
   /* Antique gold is too pale to read as text on cream (2.2:1). This is the
-     same hue taken dark enough to pass contrast (4.7:1) — use it for any
-     gold lettering that sits on a light background. */
-  --color-gold-deep: #8a6520;
+     same hue taken dark enough to pass contrast — use it for any gold
+     lettering that sits on a light background.
+     Re-derived when the sheet gained its photographed paper texture: the
+     fibre multiplies the cream down to about #EEE0C7, which cost the old
+     #8A6520 its margin (4.07:1). This holds the same hue and saturation,
+     taken dark enough to read 4.76:1 on the textured paper. If the texture
+     strength changes, this has to be re-checked. */
+  --color-gold-deep: #7d5b1d;
   --color-cream: #fbf0dc;
   --color-cream-deep: #f3e3c4;
   --color-ink: #3a1f1a;
@@ -83,18 +88,95 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
   }
 
+  /* Real paper fibre, photographed, over the painted wash.
+     The tile is normalised to near-white and multiplied, so it contributes
+     its mottling without moving the cream underneath — see the note in the
+     conversion script. It repeats down the page only: sized to the full
+     width, there is no horizontal join to give it away, and the tile is
+     mirrored vertically so the vertical repeat has no seam either. */
   .paper {
     background-color: var(--color-cream);
     background-image:
+      url("/theme/paper-field.webp"),
       radial-gradient(115% 85% at 12% 0%, rgba(227, 205, 168, 0.5), transparent 62%),
       radial-gradient(95% 70% at 92% 12%, rgba(201, 160, 91, 0.22), transparent 58%),
       radial-gradient(120% 90% at 50% 108%, rgba(122, 16, 16, 0.1), transparent 64%);
+    background-size: 100% auto, auto, auto, auto;
+    background-repeat: repeat-y, no-repeat, no-repeat, no-repeat;
+    background-blend-mode: multiply, normal, normal, normal;
   }
 
   /* Hand-cut edges: irregular but gentle, so small elements such as
      buttons keep their shape. */
   .painted-edge {
     border-radius: 13px 10px 14px 11px / 11px 13px 10px 12px;
+  }
+
+  /* ---- The letter -------------------------------------------- */
+
+  /* The surface the letter lies on. Deliberately the darkest colour in the
+     palette: the cream sheet has to read as lit, and the gold dust needs a
+     dark ground to sparkle against. */
+  .letter-desk {
+    background-color: var(--color-maroon-950);
+    background-image:
+      radial-gradient(115% 60% at 50% 0%, rgba(122, 16, 16, 0.6), transparent 62%),
+      radial-gradient(90% 45% at 50% 100%, rgba(92, 13, 13, 0.55), transparent 68%);
+  }
+
+  /* The sheet itself. Its torn, scorched edge is a real photographed one,
+     drawn as a border-image so it survives a page of any length: the ragged
+     run is repeated along the sides rather than stretched down 9000px.
+     Slice values are measured, not guessed — the scorching fades back into
+     cream 84px in from the left and right, 68px from the top and bottom.
+
+     background-clip is load-bearing. Without it the cream would paint out to
+     the border box and fill in behind the ragged notches, turning the torn
+     silhouette back into a rectangle with a brown pattern printed on it.
+     Clipped to the padding box, the notches show the desk through the gaps,
+     which is what makes the sheet read as a real torn edge.
+
+     Deliberately NOT filter: drop-shadow, which would follow the torn
+     silhouette exactly but establishes a containing block for fixed
+     positioning — that would trap the lightbox inside the sheet. A wide,
+     soft box-shadow is diffuse enough that its rectangle does not read. */
+  .letter-sheet {
+    border-style: solid;
+    border-color: transparent;
+    border-width: 15px;
+    border-image-source: url("/theme/paper-edge.webp");
+    border-image-slice: 68 84;
+    border-image-width: 1;
+    border-image-repeat: round;
+    background-clip: padding-box;
+    box-shadow: 0 40px 100px -40px rgba(0, 0, 0, 0.85);
+  }
+
+  @media (min-width: 640px) {
+    .letter-sheet {
+      border-width: 30px;
+    }
+  }
+
+  /* A band of slightly deeper paper. Faded at both ends rather than filled
+     flat: a hard tonal edge running across the sheet reads as a second
+     sheet laid on top, which is exactly what the letter is not. */
+  .paper-band {
+    background-image: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(243, 227, 196, 0.8) 14%,
+      rgba(243, 227, 196, 0.8) 86%,
+      transparent
+    );
+  }
+
+  /* A deep red block laid on the letter, rather than a full-bleed band. */
+  .letter-panel {
+    border-radius: 20px 26px 18px 24px / 16px 20px 22px 17px;
+    box-shadow:
+      0 0 0 1px rgba(201, 160, 91, 0.4),
+      0 26px 54px -32px rgba(63, 10, 10, 0.95);
   }
 
   .painted-panel {
@@ -130,14 +212,19 @@
       -webkit-text-fill-color: transparent;
       color: transparent;
     }
-    /* On cream: every stop kept dark enough to read. */
+    /* On cream: every stop kept dark enough to read. The two lightest stops
+       were taken down when the sheet gained its paper texture, and far
+       enough that the gradient now clears 3:1 for large text even on the
+       darkest paper it sits on — the footer, at about #EDDDCA. The old
+       #B58527 managed only 2.93:1 against plain cream, so this is the first
+       version that actually passes. */
     .foil {
       background-image: linear-gradient(
         168deg,
-        #b58527 0%,
+        #a27723 0%,
         #8a6520 38%,
         #6d4d12 62%,
-        #a97c23 100%
+        #a27722 100%
       );
     }
     /* On the deep red panels, where gold is free to be bright. */
@@ -247,6 +334,27 @@
     height: 100%;
     border: 0;
     filter: sepia(0.2) saturate(1.06) contrast(1.02);
+  }
+
+  /* Decorative bands — petals along an edge, gold dust across a panel —
+     are cropped to a strip, and the crop leaves a straight cut through the
+     artwork. Fading the inner edge dissolves the strip into the page
+     instead of ending it on a line. Always fades downward: the bands drawn
+     along a bottom edge are flipped, which turns this the right way up. */
+  .band-fade {
+    -webkit-mask-image: linear-gradient(to bottom, #000 35%, transparent 95%);
+    mask-image: linear-gradient(to bottom, #000 35%, transparent 95%);
+  }
+
+  /* The sliding gallery scrolls, but a scrollbar cutting across the paper
+     would break the illusion — the peeking next photo, the arrows and the
+     dots are what say "this slides". Scrolling itself is untouched, so
+     swipe, trackpad and keyboard all still work. */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   /* ---- Ornament ---------------------------------------------- */

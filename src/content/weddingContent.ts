@@ -140,6 +140,30 @@ export const wedding = {
       "/theme/grose4.webp", // one long-stemmed rose
       "/theme/grose5.webp", // symmetrical swag, widest of the five
     ],
+    // The same artwork family, but carrying deep red as well as gold. Kept
+    // apart from goldRoses because they place differently: gold alone reads
+    // on any ground, while these want the cream paper behind them — their
+    // red would sink into the maroon panels.
+    redGoldRoses: [
+      "/theme/grose6.webp", // upright bouquet, red blooms over a gold rose
+      "/theme/grose7.webp", // wide cluster, mostly gold leaf — the one that
+      //                       still reads on a dark panel
+      "/theme/grose8.webp", // tall cascade of red roses on gold stems
+    ],
+    // Fallen rose petals, drawn as bands rather than as single blooms.
+    petals: [
+      "/theme/rpetals1.webp", // wide arc of scattered petals
+      "/theme/rpetals2.webp", // dense drift, as if settled on the ground
+      "/theme/rpetals3.webp", // narrow column of petals and buds, falling
+    ],
+    // Gold dust. These are baked onto black rather than cut out, so they
+    // MUST be drawn with mix-blend-mode: screen and only ever on the deep
+    // red panels — see the note on <GoldDust> in decor/FloralAccents.
+    goldDust: [
+      "/theme/gdust1.webp", // square speckle wash
+      "/theme/gdust2.webp", // wide sparkle band with star glints
+      "/theme/gdust3.webp", // wide scatter of fine glitter
+    ],
     // The Highlights gallery. These ship with the site and appear ahead of
     // anything later added through Supabase. The caption is used as the
     // photo's alt text too, so keep it descriptive as well as fond.

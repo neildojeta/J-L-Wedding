@@ -26,9 +26,12 @@ export function Navbar() {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.6 }}
+      // The bar now rides over the dark desk rather than over cream paper,
+      // so it is lettered in gold either way — the old maroon type was
+      // invisible against the desk before it turned solid.
       className={`sticky top-0 z-40 border-b transition-colors duration-500 ${
         solid
-          ? "border-gold/45 bg-cream/95 backdrop-blur-md"
+          ? "border-gold/30 bg-maroon-950/90 backdrop-blur-md"
           : "border-transparent bg-transparent"
       }`}
     >
@@ -36,7 +39,7 @@ export function Navbar() {
         {/* Hidden on phones so all six links, RSVP included, stay reachable. */}
         <a
           href="#invitation"
-          className="hidden shrink-0 font-script text-3xl text-maroon-900 sm:block"
+          className="hidden shrink-0 font-script text-3xl text-gold-soft sm:block"
         >
           {wedding.monogram}
         </a>
@@ -46,7 +49,7 @@ export function Navbar() {
             <li key={link.href}>
               <a
                 href={link.href}
-                className="whitespace-nowrap px-1.5 py-2 font-display text-[0.72rem] font-medium uppercase tracking-[0.05em] text-maroon-900/90 transition-colors hover:text-maroon sm:px-3 sm:text-base sm:tracking-[0.14em]"
+                className="whitespace-nowrap px-1.5 py-2 font-display text-[0.72rem] font-medium uppercase tracking-[0.05em] text-cream/90 transition-colors hover:text-gold-soft sm:px-3 sm:text-base sm:tracking-[0.14em]"
               >
                 {link.label}
               </a>

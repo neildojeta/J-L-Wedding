@@ -142,6 +142,11 @@ sent are kept untouched in `assets-source/`.
 | `venue.webp` | The wide photo in the venue section |
 | `highlight1.webp` … `highlight4.webp` | The Highlights gallery |
 | `grose1.webp` … `grose5.webp` | Gold rose artwork, used as corners and dividers |
+| `grose6.webp` … `grose8.webp` | Red-and-gold roses, on the cream sections |
+| `rpetals1.webp` … `rpetals3.webp` | Fallen rose petals, along section edges |
+| `gdust1.webp` … `gdust3.webp` | Gold dust, on the deep red panels only |
+| `paper-edge.webp` | The torn, scorched edge of the sheet |
+| `paper-field.webp` | The paper fibre, tiled down the sheet |
 
 The highlight captions live with the rest of the wording, under
 `assets.highlights` in `src/content/weddingContent.ts`. Each caption doubles
@@ -152,11 +157,26 @@ full photograph gives about half its height to out-of-focus grass, and the
 invitation wants the couple large. The crop box is in the note at the top
 of the hero photograph in `src/components/Hero.tsx`.
 
-The five roses are referenced by *shape*, not by number —
-`src/components/decor/FloralAccents.tsx` names them `ROSE_SPRAY`,
-`ROSE_HEART`, `ROSE_COLUMN`, `ROSE_STEM` and `ROSE_SWAG`, and the sections
-pick the shape that suits them. If you swap the artwork, keep the shapes
-roughly alike or re-point the names.
+All of the decorative artwork is referenced by *shape*, not by number —
+`src/components/decor/FloralAccents.tsx` names the gold roses `ROSE_SPRAY`,
+`ROSE_HEART`, `ROSE_COLUMN`, `ROSE_STEM` and `ROSE_SWAG`, the red-and-gold
+ones `ROSE_BOUQUET`, `ROSE_CREST` and `ROSE_CASCADE`, and the petals and
+dust likewise. The sections pick the shape that suits them. If you swap the
+artwork, keep the shapes roughly alike or re-point the names.
+
+Two things about that artwork are worth knowing before you replace any of
+it:
+
+- **The red-and-gold roses are for the cream sections.** Their red sinks
+  into the maroon panels. `ROSE_CREST` is the exception — it carries enough
+  gold leaf to hold its shape on the dark, which is why it is the one used
+  as the divider under the order of the day.
+- **The gold dust is baked onto black, not cut out**, and is drawn with
+  `mix-blend-mode: screen`. Screen drops black to nothing, which makes the
+  alpha channel dead weight — encoding it this way took `gdust2.webp` from
+  288 KB to 44 KB. The cost is that it only works on the deep red panels: on
+  cream it disappears, and without the blend mode it shows as a black
+  rectangle. If you swap one of these files, keep it on a black ground.
 
 There are two cuts of the envelope, and the browser picks one at runtime —
 only the chosen file is downloaded:
@@ -201,8 +221,10 @@ src/
     EventDetails.tsx          ← ceremony and reception cards
     Venue.tsx                 ← venue photos, address, embedded map
     DressCode.tsx / Highlights.tsx
-    decor/FloralAccents.tsx   ← the gold roses, named by shape
-    MediaGrid.tsx             ← Supabase-backed gallery + lightbox
+    decor/FloralAccents.tsx   ← roses, petals and gold dust, named by shape
+    MediaGrid.tsx             ← Supabase-backed gallery, as a grid
+    MediaCarousel.tsx         ← the same gallery, sliding sideways
+    Lightbox.tsx              ← the viewer both galleries open
     RsvpForm.tsx              ← the RSVP form
   lib/supabase.ts             ← client, types, storage URL helper
 supabase/schema.sql           ← run once in the SQL editor
@@ -211,10 +233,74 @@ public/theme/                 ← envelope video, photos, gold rose artwork
 assets-source/                ← your original full-size files (not deployed)
 ```
 
+## The letter layout
+
+Everything the envelope contained is drawn as **one sheet of paper lying on
+a dark desk**. `src/App.tsx` holds the two pieces: `.letter-desk` is the
+deep maroon ground, `.letter-sheet` the cream page laid on it, and every
+section lives inside the sheet.
+
+Three things follow from that, and each one breaks the layout if it is
+forgotten:
+
+- **Sections must not paint their own paper.** The `paper` and
+  `canvas-grain` classes belong to the sheet alone. Put them back on a
+  section and its wash bands across the page, giving away that the letter
+  is really seven stacked blocks.
+- **The navbar has to stay outside the sheet.** The sheet is clipped with
+  `overflow-hidden` to hold its torn edge, and `position: sticky` does not
+  survive a clipping ancestor — move the navbar inside and it stops
+  sticking. It is lettered in gold because it rides over the dark desk.
+- **The two deep red sections are inset panels**, not full-bleed bands.
+  They carry `.letter-panel` plus a horizontal margin, so cream shows around
+  them and they read as cards laid on the letter.
+
+To go back to full-bleed sections, unwrap the sheet in `App.tsx` and return
+`paper canvas-grain` to each cream section.
+
+### The paper itself
+
+The sheet is a photograph of real paper — `assets-source/paper1.png` — split
+into two pieces, because one image cannot stretch over a page 1000px wide and
+9000px tall without smearing:
+
+- `paper-edge.webp` is the torn, scorched border, drawn as a CSS
+  `border-image`. The ragged run is *repeated* along the sides rather than
+  stretched, so it stays the right size however long the page gets. The
+  slice values (68px top and bottom, 84px left and right) are measured from
+  the artwork — that is where the scorching fades back into cream.
+- `paper-field.webp` is the clean centre, tiled down the page. It is sized
+  to the full width so there is no horizontal join, and mirrored vertically
+  so the vertical repeat has no seam either.
+
+Two things here are easy to break:
+
+- **`background-clip: padding-box` on `.letter-sheet` is load-bearing.**
+  Without it the cream paints out to the border box and fills in behind the
+  ragged notches, turning the torn silhouette back into a plain rectangle
+  with a brown pattern printed on it.
+- **Do not reach for `filter: drop-shadow`** to make the shadow follow the
+  torn outline. It would, but `filter` establishes a containing block for
+  fixed positioning, which traps the lightbox inside the sheet.
+
+The field tile is normalised to near-white before it is multiplied over the
+cream, so it contributes fibre without dragging the page darker. Even so the
+paper ends up around `#EEE0C7` rather than `#FBF0DC`, which cost the gold
+lettering its contrast margin — `--color-gold-deep` and the two lightest
+`.foil` stops were re-derived against the new ground. **If you change the
+texture strength, re-check those**; the note beside each one in `index.css`
+says what it is aiming for.
+
 ## Notes
 
-- Images ship as WebP and are trimmed to their artwork first, so the gold
-  roses cost 37–83 KB each and the main photo 68 KB.
+- Images ship as WebP and are trimmed to their artwork first, so each piece
+  of decor costs 17–83 KB and the main photo 68 KB.
+- The Highlights gallery slides sideways. The sliding is the browser's own
+  scroll-snapping, so a phone swipe and a trackpad flick both feel native;
+  the arrows and dots drive the same container. There is one dot per
+  position the track can rest at, which on a wide screen is fewer than the
+  number of photos — the last few share a resting place, and a dot you
+  cannot reach is worse than no dot.
 - The embedded map is a plain `<iframe>` — no Google API key, no billing.
 - Animations respect the visitor's "reduce motion" setting.
 - The envelope video is muted and `playsInline`, which is what lets it

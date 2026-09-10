@@ -1,13 +1,13 @@
 import { SectionHeading } from "./SectionHeading";
-import { MediaGrid } from "./MediaGrid";
-import { FloralCorner, ROSE_STEM } from "./decor/FloralAccents";
+import { MediaCarousel } from "./MediaCarousel";
+import { FloralCorner, PetalEdge, ROSE_STEM } from "./decor/FloralAccents";
 import { wedding } from "../content/weddingContent";
 
 export function Highlights() {
   return (
     <section
       id="highlights"
-      className="paper canvas-grain relative overflow-hidden px-5 py-20 sm:px-8 sm:py-28"
+      className="relative scroll-mt-24 overflow-hidden px-5 py-20 sm:px-8 sm:py-28"
     >
       <FloralCorner
         corner="tr"
@@ -16,6 +16,9 @@ export function Highlights() {
         opacity="opacity-55"
         className="hidden sm:block"
       />
+      {/* Petals settled along the foot of the section, as though they fell
+          out of the photographs above. */}
+      <PetalEdge edge="bottom" opacity="opacity-40" height="h-16 sm:h-24" />
 
       <div className="relative mx-auto max-w-5xl">
         <SectionHeading
@@ -24,10 +27,12 @@ export function Highlights() {
           intro={`A few of our favourite moments on the way to ${wedding.dateLabel}.`}
         />
 
-        <div className="mt-14">
-          <MediaGrid
+        {/* The carousel's arrows sit outside the track, so this keeps a
+            little room for them at the wide sizes. */}
+        <div className="mt-14 sm:px-6 lg:px-8">
+          <MediaCarousel
             category="highlight"
-            columns="two"
+            label="Highlights"
             bundled={wedding.assets.highlights}
             emptyLabel="Our favourite photos and videos are on their way."
           />

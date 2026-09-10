@@ -2,7 +2,13 @@ import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
 import { MediaGrid } from "./MediaGrid";
-import { FloralCorner, ROSE_SPRAY } from "./decor/FloralAccents";
+import {
+  FloralCorner,
+  PetalEdge,
+  PETALS_STREWN,
+  ROSE_BOUQUET,
+  ROSE_SPRAY,
+} from "./decor/FloralAccents";
 
 const { dressCode } = wedding;
 
@@ -10,15 +16,28 @@ export function DressCode() {
   return (
     <section
       id="dress-code"
-      className="relative overflow-hidden bg-cream-deep px-5 py-20 sm:px-8 sm:py-28"
+      // A washed band rather than a solid fill, so the sheet's grain carries
+      // through it and neither edge lands as a line across the paper.
+      className="paper-band relative scroll-mt-24 overflow-hidden px-5 py-20 sm:px-8 sm:py-28"
     >
       <div className="canvas-grain absolute inset-0 opacity-60" aria-hidden="true" />
+
+      {/* Red petals across the top, where the section starts talking about
+          the palette they belong to. */}
+      <PetalEdge edge="top" src={PETALS_STREWN} opacity="opacity-55" />
 
       <FloralCorner
         corner="tr"
         src={ROSE_SPRAY}
         size="w-28 sm:w-36"
         opacity="opacity-60"
+        className="hidden sm:block"
+      />
+      <FloralCorner
+        corner="bl"
+        src={ROSE_BOUQUET}
+        size="w-28 sm:w-40"
+        opacity="opacity-50"
         className="hidden sm:block"
       />
 

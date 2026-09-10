@@ -3,7 +3,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { supabase, isSupabaseConfigured, type RsvpSubmission } from "../lib/supabase";
 import { SectionHeading } from "./SectionHeading";
-import { FloralCorner, FloralDivider, ROSE_HEART } from "./decor/FloralAccents";
+import {
+  DUST_SCATTER,
+  DUST_SPECKLE,
+  FloralCorner,
+  FloralDivider,
+  GoldDust,
+  ROSE_HEART,
+} from "./decor/FloralAccents";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -74,13 +81,28 @@ export function RsvpForm() {
   return (
     <section
       id="rsvp"
-      className="relative overflow-hidden bg-maroon-950 px-5 py-20 text-cream sm:px-8 sm:py-28"
+      className="letter-panel relative mx-4 my-2 scroll-mt-24 overflow-hidden bg-maroon-950 px-5 py-16 text-cream sm:mx-8 sm:my-4 sm:px-8 sm:py-20"
     >
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-[radial-gradient(85%_65%_at_50%_100%,rgba(122,16,16,0.8),transparent_72%)]"
       />
       <div className="canvas-grain absolute inset-0 opacity-40" aria-hidden="true" />
+
+      {/* Gold flecks along the top edge and finer glitter settling along the
+          foot, so the last section of the page is framed in gold. The
+          speckle is banded rather than dropped in a corner: left as a
+          square it reads as a stain on the panel, not as scattered leaf. */}
+      <GoldDust
+        src={DUST_SPECKLE}
+        className="band-fade inset-x-0 top-0 h-36 w-full object-cover sm:h-44"
+        opacity="opacity-30"
+      />
+      <GoldDust
+        src={DUST_SCATTER}
+        className="inset-x-0 bottom-0 w-full"
+        opacity="opacity-45"
+      />
 
       <FloralCorner
         corner="tl"
