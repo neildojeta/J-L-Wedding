@@ -1,7 +1,12 @@
 import { useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
-import { supabase, isSupabaseConfigured, type RsvpSubmission } from "../lib/supabase";
+import {
+  supabase,
+  isSupabaseConfigured,
+  RSVP_LIMITS,
+  type RsvpSubmission,
+} from "../lib/supabase";
 import { SectionHeading } from "./SectionHeading";
 import {
   DUST_SCATTER,
@@ -25,18 +30,25 @@ export function RsvpForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorText, setErrorText] = useState<string | null>(null);
   const [partySize, setPartySize] = useState(1);
+  const [messageLength, setMessageLength] = useState(0);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (attending === null || status === "sending") return;
 
     const form = new FormData(event.currentTarget);
-    const text = (key: string) => {
+    // `limit` is a last guard, not the main defence: maxLength on the inputs
+    // already stops a guest typing or pasting past these. It covers values
+    // that arrive some other way — autofill, an extension — because the
+    // database rejects anything longer, and that rejection reaches the guest
+    // only as a generic failure that retrying can never clear.
+    const text = (key: string, limit?: number) => {
       const value = (form.get(key) as string | null)?.trim();
-      return value ? value : null;
+      if (!value) return null;
+      return limit ? value.slice(0, limit) : value;
     };
 
-    const fullName = text("full_name");
+    const fullName = text("full_name", RSVP_LIMITS.fullName);
     if (!fullName) {
       setErrorText("Please tell us your name.");
       setStatus("error");
@@ -49,9 +61,9 @@ export function RsvpForm() {
       phone: text("phone"),
       attending,
       party_size: attending ? partySize : 0,
-      guest_names: attending ? text("guest_names") : null,
-      dietary_notes: attending ? text("dietary_notes") : null,
-      message: text("message"),
+      guest_names: attending ? text("guest_names", RSVP_LIMITS.guestNames) : null,
+      dietary_notes: attending ? text("dietary_notes", RSVP_LIMITS.dietaryNotes) : null,
+      message: text("message", RSVP_LIMITS.message),
     };
 
     if (!supabase) {
@@ -165,6 +177,7 @@ export function RsvpForm() {
                   name="full_name"
                   required
                   autoComplete="name"
+                  maxLength={RSVP_LIMITS.fullName}
                   className={`${field} mt-2`}
                   placeholder="As it appears on your invitation"
                 />
@@ -266,6 +279,7 @@ export function RsvpForm() {
                         <input
                           id="guest_names"
                           name="guest_names"
+                          maxLength={RSVP_LIMITS.guestNames}
                           className={`${field} mt-2`}
                           placeholder="Separate names with a comma"
                         />
@@ -279,6 +293,7 @@ export function RsvpForm() {
                       <input
                         id="dietary_notes"
                         name="dietary_notes"
+                        maxLength={RSVP_LIMITS.dietaryNotes}
                         className={`${field} mt-2`}
                         placeholder="Optional"
                       />
@@ -288,13 +303,35 @@ export function RsvpForm() {
               </AnimatePresence>
 
               <div>
-                <label className={label} htmlFor="message">
-                  A message for the couple
-                </label>
+                {/* The counter sits beside the label, not under the box. Under
+                    it, it lands on the foot of the panel where the gold dust
+                    is brightest, and gold-soft over that measures about
+                    2.4:1 — unreadable exactly when a guest needs it. Up here
+                    the ground is clean maroon, and the limit is visible while
+                    they are still typing. */}
+                <div className="flex items-baseline justify-between gap-4">
+                  <label className={label} htmlFor="message">
+                    A message for the couple
+                  </label>
+                  {/* Only once the limit is in sight: a counter under an empty
+                      box reads as a word limit on a well-wish. */}
+                  {messageLength > RSVP_LIMITS.message * 0.75 && (
+                    <p
+                      aria-live="polite"
+                      className="shrink-0 font-body text-base text-gold-soft"
+                    >
+                      {RSVP_LIMITS.message - messageLength === 1
+                        ? "1 character left"
+                        : `${RSVP_LIMITS.message - messageLength} characters left`}
+                    </p>
+                  )}
+                </div>
                 <textarea
                   id="message"
                   name="message"
                   rows={4}
+                  maxLength={RSVP_LIMITS.message}
+                  onChange={(event) => setMessageLength(event.target.value.length)}
                   className={`${field} mt-2 resize-y`}
                   placeholder="Optional — we would love to hear from you"
                 />

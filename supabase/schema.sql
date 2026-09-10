@@ -69,18 +69,40 @@ create policy "Gallery is publicly readable"
 
 -- ------------------------------------------------------------------
 -- 3. Storage bucket for photos and videos
+--
+--    Wrapped in a block that catches permission errors, and this is
+--    deliberate. The SQL Editor runs the whole file as ONE transaction, and
+--    `storage.objects` is owned by `supabase_storage_admin` rather than by
+--    the role the editor uses. On projects where that blocks CREATE POLICY,
+--    an unguarded failure here would roll back everything above it — the
+--    tables and policies the site actually needs would silently not exist.
+--
+--    Losing this section costs nothing anyway: the bucket is public, and
+--    public buckets are served from /storage/v1/object/public/... without
+--    consulting RLS, which is exactly the URL getPublicUrl() builds. The
+--    couple uploads through the dashboard, which bypasses RLS as well. The
+--    policy is belt and braces for anyone who later makes the bucket
+--    private.
 -- ------------------------------------------------------------------
-insert into storage.buckets (id, name, public)
-values ('wedding-media', 'wedding-media', true)
-on conflict (id) do update set public = true;
+do $$
+begin
+  insert into storage.buckets (id, name, public)
+  values ('wedding-media', 'wedding-media', true)
+  on conflict (id) do update set public = true;
 
--- Public read access to objects in that bucket.
-drop policy if exists "Wedding media is publicly readable" on storage.objects;
-create policy "Wedding media is publicly readable"
-  on storage.objects
-  for select
-  to anon, authenticated
-  using (bucket_id = 'wedding-media');
+  drop policy if exists "Wedding media is publicly readable" on storage.objects;
+  create policy "Wedding media is publicly readable"
+    on storage.objects
+    for select
+    to anon, authenticated
+    using (bucket_id = 'wedding-media');
+
+  raise notice 'Storage: bucket wedding-media is ready and publicly readable.';
+exception
+  when insufficient_privilege then
+    raise notice 'Storage step skipped - this project will not allow it from the SQL editor (%). Nothing above is affected. Create a PUBLIC bucket named wedding-media by hand: Dashboard -> Storage -> New bucket.', sqlerrm;
+end
+$$;
 
 -- ==================================================================
 --  Handy queries for the couple

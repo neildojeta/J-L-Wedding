@@ -30,6 +30,24 @@ export interface MediaItem {
   sort_order: number;
 }
 
+/**
+ * Length caps that mirror the CHECK constraint and the RLS policy in
+ * `supabase/schema.sql`. The database rejects anything longer, and that
+ * rejection reaches the guest only as a generic "something went wrong" —
+ * which retrying can never fix. The form enforces the same limits up front
+ * so the dead end cannot happen.
+ *
+ * These two must be changed together. Note the browser counts UTF-16 code
+ * units where Postgres counts characters, so an emoji costs 2 here and 1
+ * there: the form is the stricter of the two, which is the safe direction.
+ */
+export const RSVP_LIMITS = {
+  fullName: 120,
+  guestNames: 500,
+  dietaryNotes: 500,
+  message: 2000,
+} as const;
+
 export interface RsvpSubmission {
   full_name: string;
   email: string | null;

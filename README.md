@@ -53,7 +53,12 @@ If you move the wedding, change the coordinates in all three links.
 1. Create a project at [supabase.com](https://supabase.com) (the free tier is plenty).
 2. Open **SQL Editor → New query**, paste all of **`supabase/schema.sql`**, and run it.
    That creates the `rsvps` and `media` tables, the security policies, and the
-   public `wedding-media` storage bucket.
+   public `wedding-media` storage bucket. It is safe to run more than once.
+
+   Check the **Messages/Notices** panel afterwards. If it says the storage step
+   was skipped, that project will not let the SQL editor touch `storage.objects`
+   — nothing else is affected, and the fix is one click: **Storage → New
+   bucket**, name it `wedding-media`, and tick **Public**.
 3. Open **Project Settings → API** and copy:
    - **Project URL**
    - **anon public** key
@@ -61,6 +66,17 @@ If you move the wedding, change the coordinates in all three links.
 The anon key is meant to be public — it is safe in the browser. The policies
 in `schema.sql` allow anonymous visitors to *insert* an RSVP and *read* the
 gallery, and nothing else. Guests cannot read, edit or delete replies.
+
+Two things in `schema.sql` are quietly load-bearing, if you ever edit it:
+
+- **`rsvps` has no SELECT policy, on purpose** — that is what stops one guest
+  reading another's reply. It works only because the form submits with
+  `.insert(payload)` and nothing chained after it. Adding `.select()` to that
+  call would make every RSVP fail.
+- **The length limits in the RLS policy are mirrored in the form**, as
+  `RSVP_LIMITS` in `src/lib/supabase.ts`. The database rejecting an over-long
+  message reaches the guest only as a generic failure that retrying cannot
+  clear, so the form caps the fields first. Change the two together.
 
 ---
 
