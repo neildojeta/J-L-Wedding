@@ -13,7 +13,12 @@ export const isSupabaseConfigured = Boolean(
 );
 
 export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(url, anonKey, { auth: { persistSession: false } })
+  ? createClient(url, anonKey, {
+      // The session is persisted for the couple's dashboard, so a refresh
+      // does not sign them out. Guests never sign in, so nothing is stored
+      // for them — the entry only appears once a session exists.
+      auth: { persistSession: true, autoRefreshToken: true },
+    })
   : null;
 
 /* ---------------- Table shapes ---------------- */
@@ -47,6 +52,16 @@ export const RSVP_LIMITS = {
   dietaryNotes: 500,
   message: 2000,
 } as const;
+
+/**
+ * A reply as it comes back out of the database, for the couple's dashboard.
+ * Guests never see this shape: `rsvps` grants them no select at all, so a
+ * read with the anon key returns zero rows rather than an error.
+ */
+export interface Rsvp extends RsvpSubmission {
+  id: string;
+  created_at: string;
+}
 
 export interface RsvpSubmission {
   full_name: string;

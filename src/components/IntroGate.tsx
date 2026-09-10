@@ -56,8 +56,13 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
       <FloralCorner
         corner="tl"
         src={ROSE_COLUMN}
-        size="w-20 sm:w-32 lg:w-40"
-        opacity="opacity-80"
+        // On a phone this rose is unavoidably behind the title: the artwork
+        // is tall, so moving the words down does not clear it, and narrowing
+        // them enough to miss it costs the eyebrow a third line. Faded
+        // instead, so the maroon lettering still reads over it — full
+        // strength from sm up, where there is room either side.
+        size="w-16 sm:w-32 lg:w-40"
+        opacity="opacity-30 sm:opacity-80"
       />
       <FloralCorner
         corner="br"
@@ -71,7 +76,10 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
         initial={{ opacity: 0, y: -14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.35, duration: 0.9 }}
-        className="relative z-10 shrink-0"
+        // Held to the clear middle of the screen on phones so the eyebrow
+        // does not sit on top of the corner rose; unconstrained from sm up,
+        // where there is room either side.
+        className="relative z-10 mx-auto max-w-[17rem] shrink-0 sm:max-w-none"
       >
         <p className="font-body text-xs font-medium uppercase tracking-[0.28em] text-maroon sm:text-base sm:tracking-[0.36em]">
           {wedding.intro.eyebrow}
@@ -127,8 +135,10 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
           transition={{ delay: 0.9, duration: 1 }}
           className="mt-1 font-script text-[clamp(2.2rem,13vw,3.25rem)] leading-tight text-maroon-900 sm:text-7xl"
         >
-          {wedding.partnerOne.first}
-          <span className="foil mx-2 sm:mx-4">&amp;</span>
+          {/* Spaces needed for the same reason as in Hero — without them the
+              pair cannot wrap and long names are clipped. */}
+          {wedding.partnerOne.first}{" "}
+          <span className="foil mx-1 sm:mx-3">&amp;</span>{" "}
           {wedding.partnerTwo.first}
         </motion.p>
 

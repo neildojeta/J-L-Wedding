@@ -102,11 +102,7 @@ export function DressCode() {
         </motion.div>
 
         <div className="mt-14">
-          <MediaGrid
-            category="dress_code"
-            columns="three"
-            emptyLabel="Attire inspiration photos will be added here soon."
-          />
+          <MediaGrid category="dress_code" columns="three" hideWhenEmpty />
         </div>
       </div>
     </section>

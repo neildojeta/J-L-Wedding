@@ -58,11 +58,22 @@ export function Hero() {
         <motion.h1
           {...fadeUp}
           transition={{ duration: 0.9, delay: 0.2 }}
-          className="mt-6 font-script text-[clamp(2.6rem,12.5vw,7rem)] leading-[1.05] text-maroon-900"
+          // Laid out rather than left to wrap. As plain text the pair could
+          // not break at all — JSX drops the whitespace between an expression
+          // and an element on the next line, so it rendered as one
+          // unbreakable "Jonmark&Linneth" and a phone clipped it against the
+          // section's overflow. Given it has to break somewhere, stacking is
+          // the better break: letting it flow put the ampersand at the head
+          // of the second line, orphaned against the other name.
+          // Spelled out for screen readers: the three spans carry no spaces
+          // between them, so the computed name would otherwise run together
+          // and the ampersand be read as "ampersand".
+          aria-label={`${wedding.partnerOne.first} and ${wedding.partnerTwo.first}`}
+          className="mt-6 flex flex-col items-center gap-y-1 font-script text-[clamp(2.6rem,12.5vw,7rem)] leading-[1.05] text-maroon-900 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-4 sm:gap-y-0"
         >
-          {wedding.partnerOne.first}
-          <span className="foil mx-3 sm:mx-5">&amp;</span>
-          {wedding.partnerTwo.first}
+          <span>{wedding.partnerOne.first}</span>
+          <span className="foil">&amp;</span>
+          <span>{wedding.partnerTwo.first}</span>
         </motion.h1>
 
         <motion.div

@@ -122,9 +122,44 @@ further down). Everything you add **after** that goes through Supabase — no
 redeploy needed, and the site picks it up on the next page load. Uploaded
 photos appear after the four that ship, in the same gallery.
 
+### The quick way — one command
+
+Drop your files into `media-upload/<category>/` and run:
+
+```bash
+npm run upload-media -- --dry-run   # shows exactly what it would do
+npm run upload-media                # uploads and lists them
+```
+
+It uploads each file to the bucket **and** writes the matching `media` row,
+which is the step that actually puts it on the site. Safe to re-run: files
+are replaced rather than duplicated, and an existing row is updated, so you
+can fix a caption and run it again.
+
+Name files with a leading number to control both order and caption —
+`01 - a kiss among the flowers.jpg` becomes sort order 1 with the caption
+*"A kiss among the flowers"*. For captions you'd rather write by hand, add
+`media-upload/captions.json`:
+
+```json
+{ "highlight/01 - first look.jpg": "The first look" }
+```
+
+The script needs your **service_role** key in `.env` as
+`SUPABASE_SERVICE_ROLE_KEY` — see `.env.example`. That key bypasses RLS,
+which is exactly why the anon key can't write to `media` and a guest can't
+edit your gallery. **Never** give it a `VITE_` prefix: Vite publishes every
+`VITE_` variable to the browser. The script refuses to run if you do, and
+`--dry-run` needs no key at all.
+
+`media-upload/` is gitignored — it is a staging folder, not deployed.
+
+### The manual way
+
 **Step 1 — upload the file.**
 Supabase → **Storage** → `wedding-media` bucket. Create a folder
-(`highlights`, `venue` or `dress-code`) and drag your files in.
+(`highlight`, `venue` or `dress_code` — matching the category values keeps
+things straight) and drag your files in.
 
 **Step 2 — list it on the site.**
 Supabase → **Table Editor** → `media` → **Insert row**:
@@ -133,7 +168,7 @@ Supabase → **Table Editor** → `media` → **Insert row**:
 | --- | --- |
 | `category` | `highlight`, `venue`, or `dress_code` |
 | `media_type` | `image` or `video` |
-| `url` | the path inside the bucket, e.g. `highlights/beach-01.jpg` |
+| `url` | the path inside the bucket, e.g. `highlight/beach-01.jpg` — no leading slash |
 | `caption` | optional, shown when hovering and in the viewer |
 | `sort_order` | lower numbers appear first |
 
@@ -211,6 +246,41 @@ files. If you ever replace one, replace both.
 
 ## 6. Reading your RSVPs
 
+### The dashboard at /dashboard
+
+A private page on the site itself: head count, every reply, search, CSV
+export, and a delete button for test rows. Set it up once:
+
+1. **Run `supabase/dashboard.sql`** in the SQL Editor, after `schema.sql`.
+2. **Create your account:** Authentication → Users → **Add user**, with a
+   real email and a strong password. Repeat for the second person.
+3. **Grant access.** Uncomment the `insert into public.admins` block at the
+   bottom of `dashboard.sql`, put your email addresses in it (lowercase),
+   and run it.
+4. **Turn off public sign-ups:** Authentication → Sign In / Providers →
+   Email → *Allow new users to sign up* **off**.
+
+Then visit `/dashboard` on the site and sign in.
+
+**Why it is actually private.** The site is a static page carrying only the
+anon key, so nothing the browser does can be trusted — a password check in
+JavaScript is decoration, and anyone can call the API directly with the key
+out of the bundle. The protection is in the database: `rsvps` grants `anon`
+no select at all, and the select it grants to signed-in users is conditional
+on `public.is_admin()`, which checks the address against the `admins` table.
+An unauthorised visitor who opens `/dashboard` sees a login form and, however
+they poke at it, reads zero rows.
+
+Step 4 is belt and braces. Access is already limited to the addresses you
+listed, so an open sign-up form would not by itself expose anything — but
+there is no reason to let strangers create accounts on your project.
+
+The couple can read and delete replies. Updating them is deliberately not
+granted: an RSVP is a record of what a guest said, and being able to edit it
+quietly would make the list untrustworthy.
+
+### Or straight from Supabase
+
 Supabase → **Table Editor** → `rsvps`. Newest replies are at the top, and
 the **Export CSV** button gives you a spreadsheet for the caterer.
 
@@ -237,6 +307,7 @@ src/
     EventDetails.tsx          ← ceremony and reception cards
     Venue.tsx                 ← venue photos, address, embedded map
     DressCode.tsx / Highlights.tsx
+    Dashboard.tsx             ← the couple's private RSVP page, at /dashboard
     decor/FloralAccents.tsx   ← roses, petals and gold dust, named by shape
     MediaGrid.tsx             ← Supabase-backed gallery, as a grid
     MediaCarousel.tsx         ← the same gallery, sliding sideways
@@ -244,6 +315,7 @@ src/
     RsvpForm.tsx              ← the RSVP form
   lib/supabase.ts             ← client, types, storage URL helper
 supabase/schema.sql           ← run once in the SQL editor
+supabase/dashboard.sql        ← then this, for the private dashboard
 render.yaml                   ← Render deployment blueprint
 public/theme/                 ← envelope video, photos, gold rose artwork
 assets-source/                ← your original full-size files (not deployed)

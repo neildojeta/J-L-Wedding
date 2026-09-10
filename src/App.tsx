@@ -9,6 +9,7 @@ import { DressCode } from "./components/DressCode";
 import { Highlights } from "./components/Highlights";
 import { RsvpForm } from "./components/RsvpForm";
 import { Footer } from "./components/Footer";
+import { Dashboard } from "./components/Dashboard";
 import { DUST_SCATTER, GoldDust } from "./components/decor/FloralAccents";
 
 /** `?open=1` jumps straight to the invitation, skipping the envelope. */
@@ -17,16 +18,42 @@ function shouldSkipIntro() {
   return new URLSearchParams(window.location.search).has("open");
 }
 
+/**
+ * The couple's dashboard lives at /dashboard. This is the whole router: one
+ * path, checked once, so the site keeps its single dependency-free page.
+ * Render already rewrites every unknown path to index.html (see
+ * render.yaml), which is what lets a static host serve this at all.
+ *
+ * Being able to reach the page is not the same as being able to see the
+ * replies — the database refuses those to everyone except the addresses in
+ * the admins table. See supabase/dashboard.sql.
+ */
+function isDashboardRoute() {
+  if (typeof window === "undefined") return false;
+  return window.location.pathname.replace(/\/+$/, "") === "/dashboard";
+}
+
 export default function App() {
   const [opened, setOpened] = useState(shouldSkipIntro);
+  const dashboard = isDashboardRoute();
 
-  // The page must not scroll behind the envelope screen.
+  // The page must not scroll behind the envelope screen. The dashboard is
+  // exempt: it never shows the envelope, so `opened` stays false there and
+  // this would otherwise lock its scrolling for good.
   useEffect(() => {
-    document.body.style.overflow = opened ? "" : "hidden";
+    document.body.style.overflow = opened || dashboard ? "" : "hidden";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [opened]);
+  }, [opened, dashboard]);
+
+  if (dashboard) {
+    return (
+      <MotionConfig reducedMotion="user">
+        <Dashboard />
+      </MotionConfig>
+    );
+  }
 
   return (
     <MotionConfig reducedMotion="user">

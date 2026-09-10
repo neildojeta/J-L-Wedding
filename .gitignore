@@ -6,3 +6,6 @@ dist
 *.log
 
 *.tsbuildinfo
+media-upload/*
+!media-upload/README.txt
+!media-upload/.gitkeep

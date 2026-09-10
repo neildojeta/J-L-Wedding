@@ -102,11 +102,7 @@ export function Venue() {
         </motion.div>
 
         <div className="mt-16">
-          <MediaGrid
-            category="venue"
-            columns="three"
-            emptyLabel="More photos of the garden will be added here soon."
-          />
+          <MediaGrid category="venue" columns="three" hideWhenEmpty />
         </div>
       </div>
     </section>

@@ -17,6 +17,13 @@ interface Props {
    * would rebuild the gallery on every render.
    */
   bundled?: readonly BundledPhoto[];
+  /**
+   * Render nothing at all when there is nothing to show, instead of a
+   * placeholder. The venue and attire galleries are optional extras — an
+   * empty dashed box on a finished invitation reads as something broken
+   * rather than as an invitation to add photos later.
+   */
+  hideWhenEmpty?: boolean;
 }
 
 export function MediaGrid({
@@ -25,6 +32,7 @@ export function MediaGrid({
   columns = "three",
   tone = "dark",
   bundled,
+  hideWhenEmpty = false,
 }: Props) {
   const { items, loading, error } = useGalleryItems(category, bundled);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -33,6 +41,11 @@ export function MediaGrid({
     columns === "two"
       ? "grid-cols-1 sm:grid-cols-2"
       : "grid-cols-2 sm:grid-cols-2 lg:grid-cols-3";
+
+  // Checked before the skeleton as well as before the empty state: a
+  // hidden gallery should not flash placeholder boxes on the way to
+  // showing nothing.
+  if (hideWhenEmpty && items.length === 0) return null;
 
   // Bundled photos are already on hand, so they show at once — the skeleton
   // is only for a gallery that has nothing to draw yet.
