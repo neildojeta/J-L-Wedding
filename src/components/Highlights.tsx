@@ -1,6 +1,6 @@
 import { SectionHeading } from "./SectionHeading";
 import { MediaCarousel } from "./MediaCarousel";
-import { FloralCorner, PetalEdge, ROSE_STEM } from "./decor/FloralAccents";
+import { FloralCorner, ROSE_STEM } from "./decor/FloralAccents";
 import { wedding } from "../content/weddingContent";
 
 export function Highlights() {
@@ -16,10 +16,6 @@ export function Highlights() {
         opacity="opacity-55"
         className="hidden sm:block"
       />
-      {/* Petals settled along the foot of the section, as though they fell
-          out of the photographs above. */}
-      <PetalEdge edge="bottom" opacity="opacity-40" height="h-16 sm:h-24" />
-
       <div className="relative mx-auto max-w-5xl">
         <SectionHeading
           script="Our story so far"

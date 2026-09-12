@@ -9,9 +9,10 @@ const [ROSE_SPRAY, ROSE_HEART, ROSE_COLUMN, ROSE_STEM, ROSE_SWAG] =
    gold leaf to hold up on a maroon panel; the other two are for cream. */
 const [ROSE_BOUQUET, ROSE_CREST, ROSE_CASCADE] = wedding.assets.redGoldRoses;
 
-const [PETALS_STREWN, PETALS_DRIFT, PETALS_FALL] = wedding.assets.petals;
-
-const [DUST_SPECKLE, DUST_SPARKLE, DUST_SCATTER] = wedding.assets.goldDust;
+/* All red, no gold — for the cream paper only. Two orientations of the
+   same pair of roses; see the note in weddingContent. */
+const ROSE_CRESCENT_TOP = wedding.assets.redRoseCrescent.top;
+const ROSE_CRESCENT_SIDE = wedding.assets.redRoseCrescent.side;
 
 type Corner = "tl" | "tr" | "bl" | "br";
 
@@ -92,104 +93,6 @@ function Rule({ side }: { side: "left" | "right" }) {
   return <span className={`h-px w-16 sm:w-28 ${gradient}`} />;
 }
 
-/**
- * A band of fallen petals along a section's top or bottom edge.
- *
- * The band is given a height and cropped to it rather than being stretched
- * to fit: left to scale freely across a wide screen, a 1300px-wide strip of
- * petals becomes 320px tall and each petal blows up into a soft pink blob.
- * Cropping keeps every petal at roughly its drawn size, whatever the
- * screen — `object-top` picks the densest run of them to show.
- */
-export function PetalEdge({
-  edge,
-  src = PETALS_STREWN,
-  className = "",
-  opacity = "opacity-70",
-  height = "h-24 sm:h-32",
-}: {
-  edge: "top" | "bottom";
-  src?: string;
-  className?: string;
-  opacity?: string;
-  height?: string;
-}) {
-  return (
-    <img
-      src={src}
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      className={`band-fade pointer-events-none absolute inset-x-0 w-full select-none object-cover object-top ${
-        // Flipped head-down along the bottom so the petals fall towards the
-        // edge of the page in both places.
-        edge === "top" ? "top-0" : "bottom-0 scale-y-[-1]"
-      } ${height} ${opacity} ${className}`}
-    />
-  );
-}
-
-/**
- * A narrow column of petals falling down one side of a section.
- * Decorative and tall, so callers usually hide it on phones.
- */
-export function PetalColumn({
-  side,
-  src = PETALS_FALL,
-  className = "",
-  opacity = "opacity-45",
-}: {
-  side: "left" | "right";
-  src?: string;
-  className?: string;
-  opacity?: string;
-}) {
-  return (
-    <img
-      src={src}
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      className={`pointer-events-none absolute select-none ${
-        side === "left" ? "left-0" : "right-0 scale-x-[-1]"
-      } ${opacity} ${className}`}
-    />
-  );
-}
-
-/**
- * Gold sparkle laid over a deep red panel.
- *
- * The dust artwork is baked onto black rather than cut out — it costs a
- * fraction of the bytes that way, and screen blending drops the black to
- * nothing. Two rules follow from that, and both matter:
- *
- *   1. It must keep `mix-blend-mode: screen`. Without it the artwork shows
- *      as a black rectangle.
- *   2. It only belongs on the dark panels. Screened onto cream it does
- *      nothing at all, because the paper is already brighter than the dust.
- */
-export function GoldDust({
-  src = DUST_SPARKLE,
-  className = "",
-  opacity = "opacity-60",
-}: {
-  src?: string;
-  className?: string;
-  opacity?: string;
-}) {
-  return (
-    <img
-      src={src}
-      alt=""
-      aria-hidden="true"
-      loading="lazy"
-      style={{ mixBlendMode: "screen" }}
-      className={`pointer-events-none absolute select-none ${opacity} ${className}`}
-    />
-  );
-}
-
 /** Small gold ornament for headings. */
 export function Ornament({
   className = "",
@@ -226,10 +129,6 @@ export {
   ROSE_BOUQUET,
   ROSE_CREST,
   ROSE_CASCADE,
-  PETALS_STREWN,
-  PETALS_DRIFT,
-  PETALS_FALL,
-  DUST_SPECKLE,
-  DUST_SPARKLE,
-  DUST_SCATTER,
+  ROSE_CRESCENT_TOP,
+  ROSE_CRESCENT_SIDE,
 };

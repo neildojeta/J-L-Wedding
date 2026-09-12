@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { wedding } from "../content/weddingContent";
-import { FloralCorner, ROSE_COLUMN, ROSE_SPRAY } from "./decor/FloralAccents";
+import {
+  FloralCorner,
+  ROSE_CRESCENT_SIDE,
+  ROSE_CRESCENT_TOP,
+} from "./decor/FloralAccents";
 
 /**
  * Safari plays WebM but does not composite its alpha channel — a
@@ -24,7 +28,18 @@ function useEnvelopeSource() {
  * names and call to action below. The date is not shown here — the
  * envelope is still sealed; the invitation gives it once opened.
  */
-export function IntroGate({ onOpen }: { onOpen: () => void }) {
+export function IntroGate({
+  onOpen,
+  onOpenStart,
+}: {
+  onOpen: () => void;
+  /**
+   * Fired synchronously from the click, unlike `onOpen` which waits out the
+   * fade. Anything needing the browser to still count a user gesture goes
+   * here — starting the theme song does, or iOS refuses to play it.
+   */
+  onOpenStart?: () => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [opening, setOpening] = useState(false);
   const { transparent } = useEnvelopeSource();
@@ -41,6 +56,7 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
   function handleOpen() {
     if (opening) return;
     setOpening(true);
+    onOpenStart?.();
     window.setTimeout(onOpen, 520);
   }
 
@@ -55,19 +71,19 @@ export function IntroGate({ onOpen }: { onOpen: () => void }) {
     >
       <FloralCorner
         corner="tl"
-        src={ROSE_COLUMN}
+        src={ROSE_CRESCENT_TOP}
         // On a phone this rose is unavoidably behind the title: the artwork
         // is tall, so moving the words down does not clear it, and narrowing
         // them enough to miss it costs the eyebrow a third line. Faded
         // instead, so the maroon lettering still reads over it — full
         // strength from sm up, where there is room either side.
-        size="w-16 sm:w-32 lg:w-40"
+        size="w-44 sm:w-72 lg:w-96"
         opacity="opacity-30 sm:opacity-80"
       />
       <FloralCorner
         corner="br"
-        src={ROSE_SPRAY}
-        size="w-20 sm:w-32 lg:w-40"
+        src={ROSE_CRESCENT_SIDE}
+        size="w-48 sm:w-72 lg:w-96"
         opacity="opacity-80"
       />
 

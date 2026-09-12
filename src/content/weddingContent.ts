@@ -8,24 +8,24 @@ export const wedding = {
   /* ---- The couple -------------------------------------------- */
   // Ordered to match the J & L wax seal on the envelope.
   // TODO: add the surnames — they appear in the photo's alt text.
-  partnerOne: { first: "Jonmark", full: "Jonmark [Surname]" },
+  partnerOne: { first: "Jonmarck", full: "Jonmarck [Surname]" },
   partnerTwo: { first: "Linneth", full: "Linneth [Surname]" },
   monogram: "J & L",
-  hashtag: "#JonmarkAndLinneth2026", // TODO: change if you have your own
+  hashtag: "#LingendaryMarckForever", // TODO: change if you have your own
 
   /* ---- Date & time ------------------------------------------- */
   // ISO 8601 with timezone offset. +08:00 = Philippine time.
   // The countdown reads this value.
   date: "2026-10-17T14:00:00+08:00",
-  dateLabel: "October 17, 2026",
-  dayLabel: "Saturday",
-  timeLabel: "2:00 in the afternoon",
+  dayLabel: "17 October 2026",
+  dateLabel: "Saturday",
+  timeLabel: "3:00 in the afternoon",
 
   /* ---- Landing / envelope screen ------------------------------ */
   // The date is deliberately not shown here — the envelope keeps it
   // sealed, and the invitation gives it in full once opened.
   intro: {
-    eyebrow: "Together with their families",
+    eyebrow: "Together with our families",
     title: "You Are Invited",
     subtitle: "to the wedding celebration of",
     cta: "Open the Letter",
@@ -37,26 +37,20 @@ export const wedding = {
       "And now these three remain: faith, hope and love. But the greatest of these is love.",
     quoteSource: "1 Corinthians 13:13",
     message:
-      "With hearts full of joy, and together with our families, we invite you to share in the celebration of our marriage. Your presence is the greatest gift we could ask for.",
+      "We are beyond joy and excitement to share this special day with you. Count with us ‘till the most awaited day arrives!",
   },
 
   /* ---- The day's schedule ------------------------------------- */
-  // Both halves of the day are at Viridis. If the reception moves
-  // elsewhere, change the venue and address on the second card.
+  // One card per part of the day. EventDetails lays a lone card out on its
+  // own rather than stranding it in half a row, so adding a second entry
+  // back (a reception, say) needs no change there.
   events: [
     {
       name: "Ceremony",
-      time: "2:00 PM",
+      time: "3:00 PM",
       venue: "Viridis Countryside Garden",
       address: "A. Mabini St, Amadeo, 4119 Cavite",
-      note: "Kindly be seated by 1:30 PM.",
-    },
-    {
-      name: "Reception",
-      time: "5:00 PM",
-      venue: "Viridis Countryside Garden",
-      address: "A. Mabini St, Amadeo, 4119 Cavite",
-      note: "Dinner, toasts and dancing to follow.",
+      note: "Kindly be seated by 2:30 PM.",
     },
   ],
 
@@ -89,7 +83,7 @@ export const wedding = {
     title: "Formal / Semi-Formal",
     ladies: "Long dress or elegant cocktail dress in the palette below.",
     gentlemen: "Barong Tagalog or suit, paired with dark slacks.",
-    note: "We kindly ask our guests to avoid wearing white, ivory or cream.",
+    // note: "We kindly ask our guests to avoid wearing white, ivory or cream.",
     // The wedding palette, shown to guests as colour guidance.
     palette: [
       { name: "Deep Maroon", hex: "#7A1010" },
@@ -119,7 +113,8 @@ export const wedding = {
   footer: {
     closing: "We look forward to celebrating with you.",
     contacts: [
-      { label: "[Coordinator name]", value: "[+63 900 000 0000]" }, // TODO
+      // { label: "[Coordinator name]", value: "[+63 900 000 0000]" }, // TODO
+      { label: "", value: "" }, // TODO
     ],
   },
 
@@ -130,6 +125,9 @@ export const wedding = {
     // Safari plays WebM but ignores its alpha channel, so it gets the
     // cream-background cut instead — the page is the same cream anyway.
     envelopeVideoFallback: "/theme/envelope_spin_cream.mp4",
+    // Starts when a guest opens the letter, and loops from there. It is
+    // only ever fetched once that happens — see the note on <audio> in App.
+    themeSong: "/theme/themesong.mp3",
     mainPicture: "/theme/main_picture.webp",
     // Gold rose artwork. The order is fixed — decor/FloralAccents names
     // each one by shape, and the components pick by shape, not by number.
@@ -150,20 +148,15 @@ export const wedding = {
       //                       still reads on a dark panel
       "/theme/grose8.webp", // tall cascade of red roses on gold stems
     ],
-    // Fallen rose petals, drawn as bands rather than as single blooms.
-    petals: [
-      "/theme/rpetals1.webp", // wide arc of scattered petals
-      "/theme/rpetals2.webp", // dense drift, as if settled on the ground
-      "/theme/rpetals3.webp", // narrow column of petals and buds, falling
-    ],
-    // Gold dust. These are baked onto black rather than cut out, so they
-    // MUST be drawn with mix-blend-mode: screen and only ever on the deep
-    // red panels — see the note on <GoldDust> in decor/FloralAccents.
-    goldDust: [
-      "/theme/gdust1.webp", // square speckle wash
-      "/theme/gdust2.webp", // wide sparkle band with star glints
-      "/theme/gdust3.webp", // wide scatter of fine glitter
-    ],
+    // Two red roses with a crescent of petals trailing off them, used on
+    // the envelope screen's corners. Two orientations because the two
+    // corners need the petals running along a different edge:
+    redRoseCrescent: {
+      // petals arc along the top edge — top-left corner
+      top: "/theme/grose-corner-top.webp",
+      // petals arc down the side — bottom-right corner
+      side: "/theme/grose-corner-side.webp",
+    },
     // The Highlights gallery. These ship with the site and appear ahead of
     // anything later added through Supabase. The caption is used as the
     // photo's alt text too, so keep it descriptive as well as fond.

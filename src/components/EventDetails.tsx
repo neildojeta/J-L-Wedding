@@ -2,10 +2,8 @@ import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
 import {
-  DUST_SPARKLE,
   FloralCorner,
   FloralDivider,
-  GoldDust,
   ROSE_COLUMN,
   ROSE_CREST,
 } from "./decor/FloralAccents";
@@ -21,15 +19,6 @@ export function EventDetails() {
         className="absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(122,16,16,0.75),transparent_70%)]"
       />
       <div className="canvas-grain absolute inset-0 opacity-40" aria-hidden="true" />
-
-      {/* Gold caught in the light across the top of the panel. Faded out
-          before it reaches the cards, whose glass is translucent enough to
-          take the sparkle with it and muddy the lettering. */}
-      <GoldDust
-        src={DUST_SPARKLE}
-        className="band-fade inset-x-0 top-0 w-full"
-        opacity="opacity-55"
-      />
 
       <FloralCorner
         corner="tl"
@@ -50,13 +39,20 @@ export function EventDetails() {
 
       <div className="relative mx-auto max-w-5xl">
         <SectionHeading
-          script="The Celebration"
+          script="The Wedding Celebration"
           title="Order of the Day"
           intro={`${wedding.dayLabel}, ${wedding.dateLabel}`}
           tone="light"
         />
 
-        <div className="mt-16 grid gap-8 sm:grid-cols-2 sm:gap-10">
+        {/* Two-up when there are two, but a lone card is centred at its own
+            width instead of sitting in the left half of an empty row.
+            Both class strings are static so Tailwind can still see them. */}
+        <div
+          className={`mt-16 grid gap-8 sm:gap-10 ${
+            wedding.events.length > 1 ? "sm:grid-cols-2" : "mx-auto max-w-xl"
+          }`}
+        >
           {wedding.events.map((event, index) => (
             <motion.article
               key={event.name}

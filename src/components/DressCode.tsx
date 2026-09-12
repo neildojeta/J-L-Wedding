@@ -2,13 +2,7 @@ import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
 import { MediaGrid } from "./MediaGrid";
-import {
-  FloralCorner,
-  PetalEdge,
-  PETALS_STREWN,
-  ROSE_BOUQUET,
-  ROSE_SPRAY,
-} from "./decor/FloralAccents";
+import { FloralCorner, ROSE_BOUQUET, ROSE_SPRAY } from "./decor/FloralAccents";
 
 const { dressCode } = wedding;
 
@@ -21,10 +15,6 @@ export function DressCode() {
       className="paper-band relative scroll-mt-24 overflow-hidden px-5 py-20 sm:px-8 sm:py-28"
     >
       <div className="canvas-grain absolute inset-0 opacity-60" aria-hidden="true" />
-
-      {/* Red petals across the top, where the section starts talking about
-          the palette they belong to. */}
-      <PetalEdge edge="top" src={PETALS_STREWN} opacity="opacity-55" />
 
       <FloralCorner
         corner="tr"
@@ -96,9 +86,6 @@ export function DressCode() {
               </li>
             ))}
           </ul>
-          <p className="mx-auto mt-10 max-w-xl font-body text-lg italic text-maroon-900 sm:text-xl">
-            {dressCode.note}
-          </p>
         </motion.div>
 
         <div className="mt-14">

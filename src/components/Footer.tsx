@@ -1,22 +1,9 @@
 import { wedding } from "../content/weddingContent";
-import { FloralDivider, PETALS_DRIFT } from "./decor/FloralAccents";
+import { FloralDivider } from "./decor/FloralAccents";
 
 export function Footer() {
-  // The deep bottom padding is load-bearing: the petals below settle against
-  // the foot of the sheet, and without it the hashtag sits on top of them.
   return (
-    <footer className="relative overflow-hidden px-5 pb-40 pt-16 text-center sm:pb-48 sm:pt-20">
-      {/* The last of the petals, come to rest at the foot of the page.
-          Held at its drawn size and centred rather than stretched — this
-          piece is a dense clump, and widening it enlarges every petal. */}
-      <img
-        src={PETALS_DRIFT}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto w-full max-w-lg select-none opacity-35"
-      />
-
+    <footer className="relative overflow-hidden px-5 pb-16 pt-16 text-center sm:pb-20 sm:pt-20">
       <div className="relative mx-auto max-w-2xl">
         <FloralDivider />
 
@@ -33,9 +20,9 @@ export function Footer() {
 
         {wedding.footer.contacts.length > 0 && (
           <div className="mt-9 border-t border-gold-deep/40 pt-7">
-            <p className="font-display text-base uppercase tracking-[0.2em] text-maroon-900">
+            {/* <p className="font-display text-base uppercase tracking-[0.2em] text-maroon-900">
               For questions, please reach
-            </p>
+            </p> */}
             <ul className="mt-3 space-y-1 text-lg text-ink/90">
               {wedding.footer.contacts.map((contact) => (
                 <li key={contact.label}>

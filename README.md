@@ -194,8 +194,6 @@ sent are kept untouched in `assets-source/`.
 | `highlight1.webp` … `highlight4.webp` | The Highlights gallery |
 | `grose1.webp` … `grose5.webp` | Gold rose artwork, used as corners and dividers |
 | `grose6.webp` … `grose8.webp` | Red-and-gold roses, on the cream sections |
-| `rpetals1.webp` … `rpetals3.webp` | Fallen rose petals, along section edges |
-| `gdust1.webp` … `gdust3.webp` | Gold dust, on the deep red panels only |
 | `paper-edge.webp` | The torn, scorched edge of the sheet |
 | `paper-field.webp` | The paper fibre, tiled down the sheet |
 
@@ -210,24 +208,16 @@ of the hero photograph in `src/components/Hero.tsx`.
 
 All of the decorative artwork is referenced by *shape*, not by number —
 `src/components/decor/FloralAccents.tsx` names the gold roses `ROSE_SPRAY`,
-`ROSE_HEART`, `ROSE_COLUMN`, `ROSE_STEM` and `ROSE_SWAG`, the red-and-gold
-ones `ROSE_BOUQUET`, `ROSE_CREST` and `ROSE_CASCADE`, and the petals and
-dust likewise. The sections pick the shape that suits them. If you swap the
-artwork, keep the shapes roughly alike or re-point the names.
+`ROSE_HEART`, `ROSE_COLUMN`, `ROSE_STEM` and `ROSE_SWAG`, and the
+red-and-gold ones `ROSE_BOUQUET`, `ROSE_CREST` and `ROSE_CASCADE`. The
+sections pick the shape that suits them. If you swap the artwork, keep the
+shapes roughly alike or re-point the names.
 
-Two things about that artwork are worth knowing before you replace any of
-it:
-
-- **The red-and-gold roses are for the cream sections.** Their red sinks
-  into the maroon panels. `ROSE_CREST` is the exception — it carries enough
-  gold leaf to hold its shape on the dark, which is why it is the one used
-  as the divider under the order of the day.
-- **The gold dust is baked onto black, not cut out**, and is drawn with
-  `mix-blend-mode: screen`. Screen drops black to nothing, which makes the
-  alpha channel dead weight — encoding it this way took `gdust2.webp` from
-  288 KB to 44 KB. The cost is that it only works on the deep red panels: on
-  cream it disappears, and without the blend mode it shows as a black
-  rectangle. If you swap one of these files, keep it on a black ground.
+One thing about that artwork is worth knowing before you replace any of it:
+**the red-and-gold roses are for the cream sections.** Their red sinks into
+the maroon panels. `ROSE_CREST` is the exception — it carries enough gold
+leaf to hold its shape on the dark, which is why it is the one used as the
+divider under the order of the day.
 
 There are two cuts of the envelope, and the browser picks one at runtime —
 only the chosen file is downloaded:

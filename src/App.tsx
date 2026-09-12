@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import { wedding } from "./content/weddingContent";
 import { IntroGate } from "./components/IntroGate";
+import { MusicToggle } from "./components/MusicToggle";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { EventDetails } from "./components/EventDetails";
@@ -10,7 +12,6 @@ import { Highlights } from "./components/Highlights";
 import { RsvpForm } from "./components/RsvpForm";
 import { Footer } from "./components/Footer";
 import { Dashboard } from "./components/Dashboard";
-import { DUST_SCATTER, GoldDust } from "./components/decor/FloralAccents";
 
 /** `?open=1` jumps straight to the invitation, skipping the envelope. */
 function shouldSkipIntro() {
@@ -36,6 +37,28 @@ function isDashboardRoute() {
 export default function App() {
   const [opened, setOpened] = useState(shouldSkipIntro);
   const dashboard = isDashboardRoute();
+  const themeSong = useRef<HTMLAudioElement>(null);
+  const [musicPlaying, setMusicPlaying] = useState(false);
+
+  /**
+   * Started from the Open-the-Letter click itself rather than from an effect
+   * watching `opened`: iOS only honours play() while the click that asked
+   * for it is still on the stack, and by the time the state lands it is not.
+   * A refusal is not worth surfacing — the guest still has the toggle.
+   */
+  function startThemeSong() {
+    const audio = themeSong.current;
+    if (!audio) return;
+    audio.volume = 0.5;
+    void audio.play().catch(() => undefined);
+  }
+
+  function toggleThemeSong() {
+    const audio = themeSong.current;
+    if (!audio) return;
+    if (audio.paused) void audio.play().catch(() => undefined);
+    else audio.pause();
+  }
 
   // The page must not scroll behind the envelope screen. The dashboard is
   // exempt: it never shows the envelope, so `opened` stays false there and
@@ -58,8 +81,33 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <AnimatePresence>
-        {!opened && <IntroGate key="intro" onOpen={() => setOpened(true)} />}
+        {!opened && (
+          <IntroGate
+            key="intro"
+            onOpen={() => setOpened(true)}
+            onOpenStart={startThemeSong}
+          />
+        )}
       </AnimatePresence>
+
+      {/* The song outlives the envelope, so it is mounted here rather than
+          inside IntroGate — which unmounts the moment the letter opens,
+          taking any audio element of its own with it.
+
+          preload="none" is load-bearing: the file is about 6 MB, and every
+          guest who never opens the letter would otherwise pay for it. The
+          play() call below starts the fetch. State follows the element's own
+          events rather than the calls, so the toggle still tells the truth
+          if a browser refuses to start or stops playback itself. */}
+      <audio
+        ref={themeSong}
+        src={wedding.assets.themeSong}
+        loop
+        preload="none"
+        onPlay={() => setMusicPlaying(true)}
+        onPause={() => setMusicPlaying(false)}
+      />
+      {opened && <MusicToggle playing={musicPlaying} onToggle={toggleThemeSong} />}
 
       {/* Everything the envelope contained is one sheet of paper lying on a
           dark desk. Note what must NOT move: the navbar stays outside the
@@ -76,12 +124,6 @@ export default function App() {
         // envelope is still on screen; opacity still handles the fade.
         style={{ visibility: opened ? "visible" : "hidden" }}
       >
-        <GoldDust
-          src={DUST_SCATTER}
-          className="inset-x-0 top-0 h-72 w-full object-cover"
-          opacity="opacity-40"
-        />
-
         <Navbar />
 
         <div className="relative px-3 pb-8 pt-2 sm:px-6 sm:pb-14 sm:pt-4">

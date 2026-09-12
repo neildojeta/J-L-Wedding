@@ -1,13 +1,7 @@
 import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { Countdown } from "./Countdown";
-import {
-  FloralCorner,
-  Ornament,
-  PetalColumn,
-  ROSE_COLUMN,
-  ROSE_SWAG,
-} from "./decor/FloralAccents";
+import { FloralCorner, Ornament, ROSE_COLUMN, ROSE_SWAG } from "./decor/FloralAccents";
 
 const fadeUp = {
   initial: { opacity: 0, y: 26 },
@@ -36,14 +30,6 @@ export function Hero() {
         size="w-32 lg:w-44"
         opacity="opacity-70"
         className="hidden sm:block"
-      />
-
-      {/* Petals falling past the quotation, well clear of the text column.
-          Only on the widest screens, where there is margin to spare. */}
-      <PetalColumn
-        side="left"
-        opacity="opacity-35"
-        className="bottom-32 hidden w-20 lg:block xl:w-24"
       />
 
       <div className="relative mx-auto max-w-4xl text-center">
