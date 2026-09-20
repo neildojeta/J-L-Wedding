@@ -80,7 +80,7 @@ export const wedding = {
 
   /* ---- Dress code --------------------------------------------- */
   dressCode: {
-    title: "Formal / Semi-Formal",
+    title: "Formal Attire",
     ladies: "Elegant long dress in the palette below.",
     gentlemen: "Barong Tagalog, paired with chocolate brown slacks.",
     // note: "We kindly ask our guests to avoid wearing white, ivory or cream.",
