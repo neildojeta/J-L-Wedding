@@ -11,6 +11,7 @@ import { SectionHeading } from "./SectionHeading";
 import {
   FloralCorner,
   FloralDivider,
+  MonogramMark,
   ROSE_HEART,
 } from "./decor/FloralAccents";
 
@@ -108,6 +109,7 @@ export function RsvpForm() {
       />
 
       <div className="relative mx-auto max-w-2xl">
+        <MonogramMark className="mb-5" onDark />
         <SectionHeading
           script="Will you join us?"
           title="RSVP"

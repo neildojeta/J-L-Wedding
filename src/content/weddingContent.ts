@@ -50,7 +50,7 @@ export const wedding = {
       time: "3:00 PM",
       venue: "Viridis Countryside Garden",
       address: "A. Mabini St, Amadeo, 4119 Cavite",
-      note: "Kindly be seated by 2:30 PM.",
+      // note: "Kindly be seated by 2:30 PM.",
     },
   ],
 
@@ -81,17 +81,9 @@ export const wedding = {
   /* ---- Dress code --------------------------------------------- */
   dressCode: {
     title: "Formal / Semi-Formal",
-    ladies: "Long dress or elegant cocktail dress in the palette below.",
-    gentlemen: "Barong Tagalog or suit, paired with dark slacks.",
+    ladies: "Elegant long dress in the palette below.",
+    gentlemen: "Barong Tagalog, paired with chocolate brown slacks.",
     // note: "We kindly ask our guests to avoid wearing white, ivory or cream.",
-    // The wedding palette, shown to guests as colour guidance.
-    palette: [
-      { name: "Deep Maroon", hex: "#7A1010" },
-      { name: "Burgundy", hex: "#5C0D0D" },
-      { name: "Cream", hex: "#FBF0DC" },
-      { name: "Antique Gold", hex: "#C9A05B" },
-      { name: "Champagne", hex: "#E3CDA8" },
-    ],
   },
 
   /* ---- RSVP ---------------------------------------------------- */
@@ -99,7 +91,7 @@ export const wedding = {
     // TODO: confirm. Set to about two and a half weeks before the day.
     deadlineLabel: "September 30, 2026",
     intro:
-      "Kindly let us know if you can join us. We have reserved seats for the names on your invitation.",
+      "Let us know if you can make it! We have seats saved just for you.",
     // Guests cannot request more seats than this.
     maxPartySize: 6,
     thankYouTitle: "Thank you!",
@@ -129,6 +121,16 @@ export const wedding = {
     // only ever fetched once that happens — see the note on <audio> in App.
     themeSong: "/theme/themesong.mp3",
     mainPicture: "/theme/main_picture.webp",
+    // The JL crest, standing over a section heading. Keyed off the white it
+    // was drawn on. Two cuts, because one cannot serve both grounds: the
+    // artwork's own deep gold is drawn for paper, and composited onto the
+    // maroon it lands at about (126,69,4) against a (63,10,10) panel —
+    // present, but barely. The panel cut is repainted champagne and its
+    // filigree lifted out of half-opacity.
+    monogramMark: {
+      onPaper: "/theme/monogram.webp",
+      onPanel: "/theme/monogram-light.webp",
+    },
     // Gold rose artwork. The order is fixed — decor/FloralAccents names
     // each one by shape, and the components pick by shape, not by number.
     goldRoses: [
@@ -157,6 +159,21 @@ export const wedding = {
       // petals arc down the side — bottom-right corner
       side: "/theme/grose-corner-side.webp",
     },
+    // The attire cards, in place of the swatch list that used to stand
+    // here: each carries its palette, silhouettes and rules as one piece of
+    // artwork. Uploading dress_code media through Supabase takes over from
+    // these rather than adding to them — see the note in DressCode.
+    attireCards: [
+      {
+        src: "/theme/attire-sponsors.webp",
+        caption:
+          "The dress code for principal sponsors: barong and Filipiniana, champagne gold to taupe",
+      },
+      {
+        src: "/theme/attire-guests.webp",
+        caption: "The dress code for bridesmaids, groomsmen and guests",
+      },
+    ],
     // The Highlights gallery. These ship with the site and appear ahead of
     // anything later added through Supabase. The caption is used as the
     // photo's alt text too, so keep it descriptive as well as fond.

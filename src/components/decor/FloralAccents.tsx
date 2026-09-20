@@ -14,6 +14,9 @@ const [ROSE_BOUQUET, ROSE_CREST, ROSE_CASCADE] = wedding.assets.redGoldRoses;
 const ROSE_CRESCENT_TOP = wedding.assets.redRoseCrescent.top;
 const ROSE_CRESCENT_SIDE = wedding.assets.redRoseCrescent.side;
 
+const MONOGRAM_ON_PAPER = wedding.assets.monogramMark.onPaper;
+const MONOGRAM_ON_PANEL = wedding.assets.monogramMark.onPanel;
+
 type Corner = "tl" | "tr" | "bl" | "br";
 
 // A small inset keeps the trimmed artwork fully on the page instead of
@@ -91,6 +94,34 @@ function Rule({ side }: { side: "left" | "right" }) {
       ? "bg-gradient-to-r from-transparent via-gold/60 to-gold"
       : "bg-gradient-to-l from-transparent via-gold/60 to-gold";
   return <span className={`h-px w-16 sm:w-28 ${gradient}`} />;
+}
+
+/**
+ * The JL crest, small, standing over a section's opening lines. Kept to a
+ * mark rather than a centrepiece: it repeats down the page, and at any real
+ * size it would compete with the script headings it introduces.
+ */
+export function MonogramMark({
+  className = "",
+  size = "w-16 sm:w-20",
+  onDark = false,
+}: {
+  className?: string;
+  size?: string;
+  /** Set on the deep red panels, which get the champagne cut of the crest. */
+  onDark?: boolean;
+}) {
+  return (
+    <img
+      src={onDark ? MONOGRAM_ON_PANEL : MONOGRAM_ON_PAPER}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      className={`pointer-events-none mx-auto select-none ${
+        onDark ? "floral-on-dark" : ""
+      } ${size} ${className}`}
+    />
+  );
 }
 
 /** Small gold ornament for headings. */

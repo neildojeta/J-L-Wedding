@@ -54,7 +54,11 @@ const dryRun = process.argv.includes("--dry-run");
 
 function readEnvFile() {
   const path = join(ROOT, ".env");
-  if (!existsSync(path)) fail(".env not found. Copy .env.example to .env first.");
+  // A missing .env is not fatal here. This runs before the dry-run check,
+  // and a dry run never reaches Supabase — failing now would deny you the
+  // filename preview precisely when you have not set up keys yet. A real
+  // run still stops, with a better message, in connect().
+  if (!existsSync(path)) return {};
   const out = {};
   for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
     const trimmed = line.trim();

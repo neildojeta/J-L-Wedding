@@ -4,6 +4,7 @@ import { SectionHeading } from "./SectionHeading";
 import {
   FloralCorner,
   FloralDivider,
+  MonogramMark,
   ROSE_COLUMN,
   ROSE_CREST,
 } from "./decor/FloralAccents";
@@ -38,6 +39,7 @@ export function EventDetails() {
       />
 
       <div className="relative mx-auto max-w-5xl">
+        <MonogramMark className="mb-5" onDark />
         <SectionHeading
           script="The Wedding Celebration"
           title="Order of the Day"
@@ -72,11 +74,6 @@ export function EventDetails() {
                 {event.venue}
               </p>
               <p className="mt-2 text-lg text-cream/85">{event.address}</p>
-              {event.note && (
-                <p className="mt-6 border-t border-gold/40 pt-5 text-lg italic text-gold-soft sm:text-xl">
-                  {event.note}
-                </p>
-              )}
             </motion.article>
           ))}
         </div>

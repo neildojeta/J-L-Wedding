@@ -1,7 +1,13 @@
 import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { Countdown } from "./Countdown";
-import { FloralCorner, Ornament, ROSE_COLUMN, ROSE_SWAG } from "./decor/FloralAccents";
+import {
+  FloralCorner,
+  MonogramMark,
+  Ornament,
+  ROSE_COLUMN,
+  ROSE_SWAG,
+} from "./decor/FloralAccents";
 
 const fadeUp = {
   initial: { opacity: 0, y: 26 },
@@ -33,6 +39,10 @@ export function Hero() {
       />
 
       <div className="relative mx-auto max-w-4xl text-center">
+        <motion.div {...fadeUp} transition={{ duration: 0.8 }}>
+          <MonogramMark className="mb-5" />
+        </motion.div>
+
         <motion.p
           {...fadeUp}
           transition={{ duration: 0.8, delay: 0.1 }}

@@ -1,12 +1,36 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { wedding } from "../content/weddingContent";
 import { SectionHeading } from "./SectionHeading";
-import { MediaGrid } from "./MediaGrid";
+import { Lightbox } from "./Lightbox";
+import { useMedia } from "../hooks/useMedia";
+import type { MediaItem } from "../lib/supabase";
 import { FloralCorner, ROSE_BOUQUET, ROSE_SPRAY } from "./decor/FloralAccents";
 
 const { dressCode } = wedding;
 
+/** The cards that ship with the site, shaped like uploaded rows. */
+const BUNDLED_CARDS: MediaItem[] = wedding.assets.attireCards.map(
+  (card, index) => ({
+    id: `bundled-attire-${index}`,
+    category: "dress_code",
+    media_type: "image",
+    url: card.src,
+    caption: card.caption,
+    sort_order: index,
+  }),
+);
+
 export function DressCode() {
+  // Uploaded cards stand in for the bundled pair rather than queueing up
+  // behind them: they are the same two cards re-exported, and showing both
+  // sets would print the dress code twice. Re-exporting from Canva and
+  // running `npm run upload-media` therefore needs no redeploy, while the
+  // bundled copies keep the section filled if Supabase is unreachable.
+  const { items: uploaded } = useMedia("dress_code");
+  const cards = uploaded.length > 0 ? uploaded : BUNDLED_CARDS;
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
   return (
     <section
       id="dress-code"
@@ -61,37 +85,39 @@ export function DressCode() {
           ))}
         </div>
 
-        {/* The wedding palette, offered to guests as colour guidance. */}
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.8 }}
-          className="mt-14 text-center"
-        >
-          <h3 className="font-display text-base uppercase tracking-[0.24em] text-maroon-900 sm:text-lg">
-            Our Colour Palette
-          </h3>
-          <ul className="mt-8 flex flex-wrap items-start justify-center gap-6 sm:gap-9">
-            {dressCode.palette.map((swatch) => (
-              <li key={swatch.hex} className="w-20 sm:w-24">
-                <span
-                  className="mx-auto block aspect-square w-full rounded-full shadow-[0_10px_26px_-14px_rgba(63,10,10,0.7)] ring-1 ring-inset ring-maroon-950/25"
-                  style={{ backgroundColor: swatch.hex }}
-                  aria-hidden="true"
-                />
-                <span className="mt-3 block font-body text-base font-medium uppercase tracking-[0.06em] text-ink/85">
-                  {swatch.name}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
-
-        <div className="mt-14">
-          <MediaGrid category="dress_code" columns="three" hideWhenEmpty />
+        {/* One card per row, uncropped and at the full width of the sheet.
+            Side by side they would be about half this wide, and the small
+            print on them — the shades, the "no jeans" line — stops being
+            readable well before that. They are still tight on a phone, so
+            each one opens full-screen to be pinched. */}
+        <div className="mt-14 space-y-8 sm:space-y-10">
+          {cards.map((card, index) => (
+            <motion.button
+              key={card.id}
+              type="button"
+              onClick={() => setActiveIndex(index)}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.75, delay: Math.min(index, 4) * 0.08 }}
+              className="painted-edge block w-full cursor-zoom-in overflow-hidden border border-gold-deep/35 shadow-[0_18px_44px_-26px_rgba(63,10,10,0.75)] transition-transform duration-500 hover:-translate-y-1"
+              aria-label={`${card.caption ?? "Dress code card"} — tap to enlarge`}
+            >
+              <img
+                src={card.url}
+                alt={card.caption ?? ""}
+                loading="lazy"
+                className="block w-full"
+              />
+            </motion.button>
+          ))}
         </div>
       </div>
+
+      <Lightbox
+        item={activeIndex === null ? null : (cards[activeIndex] ?? null)}
+        onClose={() => setActiveIndex(null)}
+      />
     </section>
   );
 }
