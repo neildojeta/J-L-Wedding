@@ -83,7 +83,7 @@ export const wedding = {
     title: "Formal Attire",
     // ladies: "Elegant long dress in the palette below.",
     // gentlemen: "Barong Tagalog, paired with chocolate brown slacks.",
-    // note: "We kindly ask our guests to avoid wearing white, ivory or cream.",
+    note: "Please be guided accordingly.",
   },
 
   /* ---- RSVP ---------------------------------------------------- */
@@ -163,13 +163,19 @@ export const wedding = {
     // here: each carries its palette, silhouettes and rules as one piece of
     // artwork. Uploading dress_code media through Supabase takes over from
     // these rather than adding to them — see the note in DressCode.
+    // `heading` is the line printed above each card on the page; `caption`
+    // is the alt text and the lightbox label. The headings are matched to
+    // the cards by position, so an uploaded card takes the heading of the
+    // one it stands in for — keep this list in the order they appear.
     attireCards: [
       {
+        heading: "For Ninong and Ninang",
         src: "/theme/attire-sponsors.webp",
         caption:
           "The dress code for principal sponsors: barong and Filipiniana, champagne gold to taupe",
       },
       {
+        heading: "For Bridesmaid, Groomsmen, and Guests",
         src: "/theme/attire-guests.webp",
         caption: "The dress code for bridesmaids, groomsmen and guests",
       },

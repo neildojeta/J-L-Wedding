@@ -62,55 +62,67 @@ export function DressCode() {
           intro={dressCode.title}
         />
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {[
-            { heading: "For the Ladies", body: dressCode.ladies },
-            { heading: "For the Gentlemen", body: dressCode.gentlemen },
-          ].map((card, index) => (
-            <motion.div
-              key={card.heading}
-              initial={{ opacity: 0, y: 26 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.75, delay: index * 0.1 }}
-              className="painted-panel px-8 py-8 text-center"
-            >
-              <h3 className="font-display text-base uppercase tracking-[0.22em] text-gold-deep sm:text-lg">
-                {card.heading}
-              </h3>
-              <p className="mt-4 text-lg leading-relaxed text-ink/90 sm:text-xl">
-                {card.body}
-              </p>
-            </motion.div>
-          ))}
-        </div>
+        <p className="mx-auto mt-4 max-w-xl text-center font-body text-lg italic text-maroon-900 sm:text-xl">
+          {dressCode.note}
+        </p>
 
-        {/* One card per row, uncropped and at the full width of the sheet.
-            Side by side they would be about half this wide, and the small
-            print on them — the shades, the "no jeans" line — stops being
-            readable well before that. They are still tight on a phone, so
-            each one opens full-screen to be pinched. */}
-        <div className="mt-14 space-y-8 sm:space-y-10">
-          {cards.map((card, index) => (
-            <motion.button
-              key={card.id}
-              type="button"
-              onClick={() => setActiveIndex(index)}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
-              transition={{ duration: 0.75, delay: Math.min(index, 4) * 0.08 }}
-              className="painted-edge block w-full cursor-zoom-in overflow-hidden border border-gold-deep/35 shadow-[0_18px_44px_-26px_rgba(63,10,10,0.75)] transition-transform duration-500 hover:-translate-y-1"
-              aria-label={`${card.caption ?? "Dress code card"} — tap to enlarge`}
-            >
-              <img
-                src={card.url}
-                alt={card.caption ?? ""}
-                loading="lazy"
-                className="block w-full"
-              />
-            </motion.button>
-          ))}
+        {/* Each card is mounted the way the hero photograph is — poured gold
+            mat, maroon nameplate — rather than laid on the paper as a bare
+            rectangle. The artwork is white stock and the sheet is cream, so
+            without a mat between them the cards read as something pasted on.
+
+            One per row: side by side they would be half this wide, and the
+            small print — the shades, the "no jeans" line — stops being
+            readable well before that. */}
+        <div className="mt-16 space-y-16 sm:space-y-20">
+          {cards.map((card, index) => {
+            // Taken by position, so an uploaded card inherits the heading of
+            // the bundled one it stands in for.
+            const heading = wedding.assets.attireCards[index]?.heading;
+
+            return (
+              <motion.figure
+                key={card.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.8 }}
+              >
+                {/* Kept quiet on purpose. The cards are busy artwork in
+                    their own right, so the label borrows the same brush
+                    underline the section titles use rather than competing
+                    with them from a plate of its own. */}
+                {heading && (
+                  <figcaption className="brush-underline mx-auto mb-9 max-w-md text-center font-display text-sm uppercase leading-relaxed tracking-[0.2em] text-gold-deep sm:mb-10 sm:max-w-2xl sm:text-base sm:tracking-[0.26em]">
+                    {heading}
+                  </figcaption>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  className="frame-gold block w-full cursor-zoom-in"
+                  aria-label={`${heading ?? card.caption ?? "Dress code card"} — open full screen`}
+                >
+                  <span className="frame-gold-inner block">
+                    <img
+                      src={card.url}
+                      alt={card.caption ?? ""}
+                      loading="lazy"
+                      className="block w-full"
+                    />
+                  </span>
+                </button>
+
+                {/* On a phone the card is about 290px wide, which puts its
+                    smallest line near 5px. Say so plainly rather than leave
+                    a guest squinting at it. */}
+                <p className="mt-4 text-center font-body text-base italic text-ink/70 sm:hidden">
+                  Tap to open it full screen
+                </p>
+              </motion.figure>
+            );
+          })}
         </div>
       </div>
 
