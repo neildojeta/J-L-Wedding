@@ -26,18 +26,24 @@ export function Countdown() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.8 }}
-      className="mx-auto flex max-w-xl items-stretch justify-center gap-2 sm:gap-4"
+      // A grid, not a flex row. As flex items the cells carried the default
+      // min-width:auto, so "MINUTES" and "SECONDS" refused to shrink below
+      // their labels and pushed the row wider than the sheet, which clips it.
+      // Four equal 1fr tracks cannot be widened by their contents.
+      className="mx-auto grid max-w-xl grid-cols-4 gap-1.5 sm:gap-4"
       aria-label="Countdown to the wedding day"
     >
       {cells.map((cell) => (
         <div
           key={cell.label}
-          className="painted-edge flex-1 border border-gold-deep/45 bg-cream/80 px-2 py-4 text-center shadow-[0_14px_34px_-24px_rgba(63,10,10,0.8)] sm:px-4 sm:py-5"
+          className="painted-edge min-w-0 border border-gold-deep/45 bg-cream/80 px-1 py-4 text-center shadow-[0_14px_34px_-24px_rgba(63,10,10,0.8)] sm:px-4 sm:py-5"
         >
-          <div className="font-display text-3xl text-maroon-900 tabular-nums sm:text-5xl">
+          <div className="font-display text-[clamp(1.6rem,7.5vw,1.875rem)] text-maroon-900 tabular-nums sm:text-5xl">
             {String(cell.value).padStart(2, "0")}
           </div>
-          <div className="mt-1.5 font-body text-xs font-medium uppercase tracking-[0.14em] text-ink/85 sm:text-base sm:tracking-[0.2em]">
+          {/* Sized off the viewport rather than a fixed step: "SECONDS" is the
+              widest label and a quarter of a phone-width sheet is all it gets. */}
+          <div className="mt-1.5 font-body text-[clamp(0.5rem,2.6vw,0.75rem)] font-medium uppercase tracking-[0.06em] text-ink/85 sm:text-base sm:tracking-[0.2em]">
             {cell.label}
           </div>
         </div>

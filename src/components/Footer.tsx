@@ -33,7 +33,13 @@ export function Footer() {
           </div>
         )}
 
-        <p className="foil mt-10 font-script text-4xl">{wedding.hashtag}</p>
+        {/* One unbreakable word in a script face, inside a sheet that clips
+            its overflow to keep the torn edge — at a fixed 4xl the tail ran
+            off both sides of a phone. Scaled off the viewport instead, and
+            given room below for Great Vibes' descenders. */}
+        <p className="foil mt-10 whitespace-nowrap font-script text-[clamp(1.4rem,7vw,2.25rem)] leading-[1.45]">
+          {wedding.hashtag}
+        </p>
       </div>
     </footer>
   );
