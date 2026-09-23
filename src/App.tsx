@@ -9,6 +9,7 @@ import { EventDetails } from "./components/EventDetails";
 import { Venue } from "./components/Venue";
 import { DressCode } from "./components/DressCode";
 import { Highlights } from "./components/Highlights";
+import { GiftNote } from "./components/GiftNote";
 import { RsvpForm } from "./components/RsvpForm";
 import { Footer } from "./components/Footer";
 import { Dashboard } from "./components/Dashboard";
@@ -136,6 +137,7 @@ export default function App() {
             <Venue />
             <DressCode />
             <Highlights />
+            <GiftNote />
             <RsvpForm />
             <Footer />
           </div>

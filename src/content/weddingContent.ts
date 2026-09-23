@@ -128,6 +128,18 @@ export const wedding = {
     galleryTitle: "Highlights",
   },
 
+  /* ---- Gifts ---------------------------------------------------- */
+  // Kept deliberately small on the page — see the note in GiftNote. The
+  // copy leads with presence and closes on it, and the ask sits in the
+  // middle where it belongs.
+  gifts: {
+    script: "A note on gifts",
+    message:
+      "Your love, support, and presence on our big day mean the world to us, but if you wish to bless us with a gift to help us start our new journey, a gift of cash as contribution toward our future together would be wonderful.",
+    closing:
+      "More than anything, we just want to celebrate this unforgettable day with you!",
+  },
+
   /* ---- RSVP ---------------------------------------------------- */
   rsvp: {
     // TODO: confirm. Set to about two and a half weeks before the day.
