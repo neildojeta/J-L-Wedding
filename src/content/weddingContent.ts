@@ -86,6 +86,48 @@ export const wedding = {
     note: "Please be guided accordingly.",
   },
 
+  /* ---- The couple's story -------------------------------------- */
+  // Verse, and set as verse on the page. Every break below is the author's:
+  // Highlights draws one element per string, so the browser never re-flows
+  // two of his lines into one. Stanzas are the outer array, lines the inner.
+  story: {
+    script: "How it all began",
+    title: "Our Story",
+    poem: [
+      [
+        "On one Sunday night,",
+        "With the hymns of music around, and hearts ablazed,",
+        "Amidst the roaring crowd and blinding lights,",
+        "There he saw the lady in white as he heard the chiming of bells",
+      ],
+      [
+        "Taking ahold of time, as precious as gold",
+        "When the moon is so high and the stars are shining bright,",
+        "A message from him, she received out of the blue",
+        "He said his name, and she said hers back",
+      ],
+      [
+        "It was unexpected and surely surprising",
+        "And yet, by God’s divine power, they both knew it was fate all along",
+        "Two different persons, two different paths",
+        "Two different generations and two different hearts",
+        "Yet with God in the center, and His hand joining theirs",
+        "Two worlds became one universe, and two heartbeats became one rhythm",
+      ],
+    ],
+    // The one line in gold script. Everything above builds to it, and
+    // nothing else in the section is allowed to compete with it.
+    refrain: "A love story written by God, for both Jonmarck and Linneth.",
+    coda:
+      "More marvelous and adventurous tales will come along, as they now awaits their blessed union.",
+    // The plain account, after the verse — what actually happened that night.
+    prose:
+      "Jonmarck and Linneth’s paths first crossed unexpectedly following a church Youth event. At first, they were nothing more than strangers sharing the same space. But the moment Jonmarck saw Linneth, something shifted within him—an unmistakable realization that she was the one he had been waiting for. Taking a leap of faith, he made the first move and sent her a message. From that single spark, the rest of their beautiful story began to unfold.",
+    // The photographs now sit under the story rather than carrying the
+    // section on their own, so they get a heading of their own.
+    galleryTitle: "Highlights",
+  },
+
   /* ---- RSVP ---------------------------------------------------- */
   rsvp: {
     // TODO: confirm. Set to about two and a half weeks before the day.

@@ -7,7 +7,7 @@ const links = [
   { href: "#details", label: "Details" },
   { href: "#venue", label: "Venue" },
   { href: "#dress-code", label: "Attire" },
-  { href: "#highlights", label: "Highlights" },
+  { href: "#highlights", label: "Our Story" },
   { href: "#rsvp", label: "RSVP" },
 ];
 

@@ -11,9 +11,9 @@ export function Footer() {
           {wedding.partnerOne.first} <span className="foil">&amp;</span>{" "}
           {wedding.partnerTwo.first}
         </p>
-        <p className="mt-4 font-display text-base uppercase tracking-[0.26em] text-maroon-900/90 sm:text-lg">
+        {/* <p className="mt-4 font-display text-base uppercase tracking-[0.26em] text-maroon-900/90 sm:text-lg">
           {wedding.dateLabel}
-        </p>
+        </p> */}
         <p className="mt-7 text-lg italic text-ink/90 sm:text-xl">
           {wedding.footer.closing}
         </p>
