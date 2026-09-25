@@ -9,3 +9,6 @@ dist
 media-upload/*
 !media-upload/README.txt
 !media-upload/.gitkeep
+
+# Cached webfont for scripts/make-share-card.py — re-downloaded on demand.
+scripts/.fonts/
