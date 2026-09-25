@@ -11,7 +11,7 @@ export const wedding = {
   partnerOne: { first: "Jonmarck", full: "Jonmarck [Surname]" },
   partnerTwo: { first: "Linneth", full: "Linneth [Surname]" },
   monogram: "J & L",
-  hashtag: "#OnYourMARCKGetSetLINN", // TODO: change if you have your own
+  hashtag: "#OnYourMarckGetSetLinn", // TODO: change if you have your own
 
   /* ---- Date & time ------------------------------------------- */
   // ISO 8601 with timezone offset. +08:00 = Philippine time.
