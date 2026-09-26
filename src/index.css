@@ -171,20 +171,6 @@
     );
   }
 
-  /* The pool of warmer paper the poem is written in. Deliberately not a
-     card: a bordered block laid on the letter reads as a second sheet, and
-     the verse is written on this one. So there is no edge to find — the
-     wash fades to nothing well before the column does, and all it leaves is
-     a change in the light where the writing is. */
-  .verse-ground {
-    background-image: radial-gradient(
-      76% 60% at 50% 48%,
-      rgba(201, 160, 91, 0.17),
-      rgba(243, 227, 196, 0.44) 44%,
-      transparent 75%
-    );
-  }
-
   /* A deep red block laid on the letter, rather than a full-bleed band. */
   .letter-panel {
     border-radius: 20px 26px 18px 24px / 16px 20px 22px 17px;

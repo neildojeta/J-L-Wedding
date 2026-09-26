@@ -87,22 +87,25 @@ export const wedding = {
   },
 
   /* ---- The couple's story -------------------------------------- */
-  // Verse, and set as verse on the page. Every break below is the author's:
-  // Highlights draws one element per string, so the browser never re-flows
-  // two of his lines into one. Stanzas are the outer array, lines the inner.
+  // The poem is artwork now: a torn-paper collage set in typewriter, drawn
+  // by the couple and exported from assets-source/story.png. The lines below
+  // are a transcription of exactly what the picture says — they are what a
+  // screen reader reads out and what a search engine indexes, since neither
+  // can see the picture. Redraw the picture and these have to follow it.
   story: {
     script: "How it all began",
     title: "Our Story",
+    image: "/theme/story.webp",
     poem: [
       [
-        "On one Sunday night,",
-        "With the hymns of music around, and hearts ablazed,",
-        "Amidst the roaring crowd and blinding lights,",
-        "There he saw the lady in white as he heard the chiming of bells",
+        "On one Sunday night",
+        "With the hymns of music around and hearts ablazed",
+        "Amidst the roaring crowd and blinding lights",
+        "There he saw the lady donned in white as he heard the chiming of bells",
       ],
       [
         "Taking ahold of time, as precious as gold",
-        "When the moon is so high and the stars are shining bright,",
+        "When the moon is so high and the stars are shining bright",
         "A message from him, she received out of the blue",
         "He said his name, and she said hers back",
       ],
@@ -111,18 +114,29 @@ export const wedding = {
         "And yet, by God’s divine power, they both knew it was fate all along",
         "Two different persons, two different paths",
         "Two different generations and two different hearts",
+      ],
+      [
         "Yet with God in the center, and His hand joining theirs",
-        "Two worlds became one universe, and two heartbeats became one rhythm",
+        "Two worlds became one universe",
+        "Two heartbeats became one rhythm",
+        "A love story written by God, for both Jonmarck and Linneth",
       ],
     ],
-    // The one line in gold script. Everything above builds to it, and
-    // nothing else in the section is allowed to compete with it.
-    refrain: "A love story written by God, for both Jonmarck and Linneth.",
+    // Not in the picture — this is the line the page adds after it.
     coda:
       "More marvelous and adventurous tales will come along, as they now awaits their blessed union.",
-    // The plain account, after the verse — what actually happened that night.
-    prose:
-      "Jonmarck and Linneth’s paths first crossed unexpectedly following a church Youth event. At first, they were nothing more than strangers sharing the same space. But the moment Jonmarck saw Linneth, something shifted within him—an unmistakable realization that she was the one he had been waiting for. Taking a leap of faith, he made the first move and sent her a message. From that single spark, the rest of their beautiful story began to unfold.",
+    // The plain account, after the verse. An array because it is six
+    // paragraphs now, and Highlights sets each one as its own: run together
+    // as a single string they would print as one centred slab, and centred
+    // text that long is where the eye loses the start of each line.
+    prose: [
+      "For months, Jonmarck and Linneth existed in the same orbit, passing each other in every joint fellowships and youth events, sharing the same spaces. To Linneth, those were all ordinary days and activities. But to Jonmarck, the world had fundamentally shifted the exact moment he first saw her.",
+      "It wasn’t a sudden, loud realization, but rather a quiet, undeniable certainty that settled deep within him, a clear, resonant truth: she was the one he had been waiting for. Taking a leap of faith, he made the first move and sent her a message.",
+      "At first, they were nothing more than strangers sharing the same space. But from that single spark, the rest of their beautiful story began to unfold.",
+      "Years passed in a beautiful rhythm of patience, growth, and unconditional support. They walked through seasons of waiting, anchored by their faith and a shared vision for the future. Every prayer whispered in silence seemed to lead them to this very moment.",
+      "Now, the waiting is over. The melody that began with a quiet glance and a single message has swelled into a masterpiece.",
+      "Hand in hand, with grateful hearts, Jonmarck and Linneth stand in faith, ready to unfold the most beautiful chapter of their lives.",
+    ],
     // The photographs now sit under the story rather than carrying the
     // section on their own, so they get a heading of their own.
     galleryTitle: "Highlights",
@@ -229,9 +243,16 @@ export const wedding = {
           "The dress code for principal sponsors: barong and Filipiniana, champagne gold to taupe",
       },
       {
-        heading: "For Bridesmaid, Groomsmen, and Guests",
+        heading: "For Bridesmaid and Groomsmen",
+        src: "/theme/attire-bmaid-gmen.webp",
+        caption:
+          "The dress code for the wedding party. Bridesmaids: bold, vibrant, fiery — three shades of deep crimson and wine. Groomsmen: ordinary Barong Tagalog with chocolate brown slacks or pants.",
+      },
+      {
+        heading: "For Guests",
         src: "/theme/attire-guests.webp",
-        caption: "The dress code for bridesmaids, groomsmen and guests",
+        caption:
+          "The dress code for guests. Men and women in formal dress and attire, in terracotta and warm clay shades. This is a formal event — strictly no casual wear such as T-shirts, shorts, miniskirts or jeans.",
       },
     ],
     // The Highlights gallery. These ship with the site and appear ahead of
