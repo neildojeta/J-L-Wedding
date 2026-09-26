@@ -12,3 +12,11 @@ media-upload/*
 
 # Cached webfont for scripts/make-share-card.py — re-downloaded on demand.
 scripts/.fonts/
+
+# Camera and drone originals. This one is 180 MB and GitHub hard-refuses
+# anything over 100 MB, so the push would fail. The web-ready encode in
+# public/theme is what the site ships; keep originals in your own backup.
+assets-source/*.mp4
+assets-source/*.MP4
+assets-source/*.mov
+assets-source/*.MOV

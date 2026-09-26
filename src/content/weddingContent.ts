@@ -124,7 +124,8 @@ export const wedding = {
     ],
     // Not in the picture — this is the line the page adds after it.
     coda:
-      "More marvelous and adventurous tales will come along, as they now awaits their blessed union.",
+      // "More marvelous and adventurous tales will come along, as they now awaits their blessed union.",
+      "",
     // The plain account, after the verse. An array because it is six
     // paragraphs now, and Highlights sets each one as its own: run together
     // as a single string they would print as one centred slab, and centred
@@ -226,6 +227,24 @@ export const wedding = {
       top: "/theme/grose-corner-top.webp",
       // petals arc down the side — bottom-right corner
       side: "/theme/grose-corner-side.webp",
+    },
+    // The drone shot that closes the story: a slow descent over the garden
+    // with the couple, hand in hand, two small figures on the lawn. Their
+    // smallness is the shot, so it is drawn wider than anything else in
+    // that section.
+    //
+    // The original is 4K60 HEVC 10-bit at 180 MB — unplayable in Chrome and
+    // unloadable on mobile data. What ships is 1600x900 H.264 at 4 MB, made
+    // with (one line, from assets-source/):
+    //   ffmpeg -i video-1.MP4 -map 0:v:0 -vf "scale=1600:-2,fps=30"
+    //     -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 28 -preset medium
+    //     -movflags +faststart -an public/theme/aerial.mp4
+    // -map 0:v:0 matters: the file also carries two DJI data streams and a
+    // stray thumbnail, and without it they ride along into the output.
+    aerial: {
+      src: "/theme/aerial.mp4",
+      poster: "/theme/aerial-poster.webp",
+      alt: "Looking straight down on the garden lawn from above, with Jonmarck and Linneth standing hand in hand at its centre",
     },
     // The attire cards, in place of the swatch list that used to stand
     // here: each carries its palette, silhouettes and rules as one piece of

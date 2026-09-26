@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { SectionHeading } from "./SectionHeading";
 import { MediaCarousel } from "./MediaCarousel";
 import { Lightbox } from "./Lightbox";
+import { AerialFilm } from "./AerialFilm";
 import {
   FloralCorner,
   FloralDivider,
@@ -152,6 +153,27 @@ export function Highlights() {
               </p>
             ),
           )}
+        </motion.div>
+
+        {/* The story's last line says they stand hand in hand; this is that,
+            seen from a few hundred feet up. It closes the account rather than
+            opening the gallery, so it sits above the Highlights heading.
+
+            Drawn at the full width of the section — wider than the poem, the
+            prose and the photographs. The couple are perhaps ten pixels tall
+            in it, and that is the shot: two people alone in a very large
+            green place. Shrink it into a column and there is nothing to see.
+
+            The cream mat rather than the gold one the poem wears: this is a
+            photograph, and the section already spent its gold on artwork. */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="photo-frame mt-16 aspect-video w-full sm:mt-20"
+        >
+          <AerialFilm />
         </motion.div>
 
         <div className="mt-20 sm:mt-24">
